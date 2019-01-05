@@ -27,44 +27,49 @@ namespace ZmsiProjOne
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, 1d }), 0));
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, -1d }), 0));
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, 1d }), 0));
-
-            for(int i = 0; i < potencjalWejsciowy.Count; i++)
+            
+            for (int i = 0; i < potencjalWejsciowy.Count; i++)
             {
+                List<ExaminationStep> steps = new List<ExaminationStep>();
+                var newStep = new ExaminationStep()
+                {
+                    PotencjalWejsciowy = potencjalWejsciowy[i].Item1
+                };
+
                 // Jak skończy wszystkie kroki to ustawić na false
                 bool isExamining = true;
-                int stepCounter = 0;
 
                 Console.WriteLine($"\n\n--- Rozpoczęto badanie nr. {i + 1} ---");
                 while(isExamining)
                 {
-                    stepCounter++;
+                    newStep.Numer = steps.Count;
                     Console.WriteLine($"Badany wektor:");
                     foreach (var item in potencjalWejsciowy[i].Item1.ToArray())
                     {
                         Console.Write(item + ", ");
                     }
 
-                    Console.WriteLine($"\nKrok: {stepCounter}-------------------");
+                    Console.WriteLine($"\nKrok: {newStep.Numer}-------------------");
                     Console.WriteLine($"Potencjał wejściowy (U):");
 
-                    var obliczonyPotencjalWejsciowy = Matrix.Multiply(potencjalWejsciowy[i].Item1, macierzWag); 
-                    foreach (var item in obliczonyPotencjalWejsciowy.ToArray())
+                    newStep.ObliczonyPotencjalWejsciowy = Matrix.Multiply(potencjalWejsciowy[i].Item1, macierzWag); 
+                    foreach (var item in newStep.ObliczonyPotencjalWejsciowy.ToArray())
                     {
                         Console.Write(item + ", ");
                     }
 
                     List<double> wyjsciowy = new List<double>();
                     Console.WriteLine($"\nPotencjał wyjściowy (V):");
-                    foreach (var item in obliczonyPotencjalWejsciowy.ToArray())
+                    foreach (var item in newStep.ObliczonyPotencjalWejsciowy.ToArray())
                     {
                         wyjsciowy.Add(FunkcjaAktywacjiBiPolarna(item));
                     }
-                    var potencjalWyjsciowy = new Matrix(wyjsciowy.ToArray());
+                    newStep.PotencjalWyjsciowy = new Matrix(wyjsciowy.ToArray());
 
                     Console.Write(String.Join(",", wyjsciowy));
 
                     var obliczonaEnergia = 1d;// EnergiaSync(macierzWag, macierzI, new Matrix(new double[,] { potencjalWejsciowy[i].Item1.ToArray(), wyjsciowy.ToArray() }));
-                    Console.WriteLine($"\nEnergia({stepCounter}) = {obliczonaEnergia}\n");
+                    Console.WriteLine($"\nEnergia({newStep.Numer}) = {obliczonaEnergia}\n");
 
 
                     // Sprawdzanie warunków
