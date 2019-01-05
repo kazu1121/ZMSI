@@ -15,19 +15,19 @@ namespace ZmsiProjOne
 
         static void SynchHopfield()
         {
-            Matrix macierzWag = new Matrix(new double[,] { { 0d, 1d, 2d }, { 1d, 0d, -1d }, { 2d, -1d, 0d } });
-            Matrix macierzI = new Matrix(new double[] { 0.5d, 0.5d, 0.5d });
-            List<Tuple<Matrix, int>> potencjalWejsciowy = new List<Tuple<Matrix, int>>();
+            Matrix macierzWag = new Matrix(new double[,] { { 0d, 1d }, { -0.5d, 0d } });
+            Matrix macierzI = new Matrix(new double[] { 0d,0d });
+            //List<Tuple<Matrix, int>> potencjalWejsciowy = new List<Tuple<Matrix, int>>();
+            var potencjalWejsciowy = GenerujTablicePotencjalowWejsciowych(2, false);
+            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, -1d, -1d }), 0));
+            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, -1d, 1d }), 0));
+            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, 1d, -1d }), 0));
+            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, 1d, 1d }), 0));
+            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, -1d }), 0));
+            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, 1d }), 0));
+            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, -1d }), 0));
+            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, 1d }), 0));
 
-            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, -1d, -1d }), 0));
-            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, -1d, 1d }), 0));
-            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, 1d, -1d }), 0));
-            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, 1d, 1d }), 0));
-            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, -1d }), 0));
-            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, 1d }), 0));
-            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, -1d }), 0));
-            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, 1d }), 0));
-            
             for (int i = 0; i < potencjalWejsciowy.Count; i++)
             {
                 List<ExaminationStep> steps = new List<ExaminationStep>();
@@ -71,7 +71,7 @@ namespace ZmsiProjOne
 
                     Console.Write(String.Join(",", wyjsciowy));
 
-                    var obliczonaEnergia = 1d;// EnergiaSync(macierzWag, macierzI, new Matrix(new double[,] { potencjalWejsciowy[i].Item1.ToArray(), wyjsciowy.ToArray() }));
+                    var obliczonaEnergia = EnergiaSync(macierzWag, macierzI,newStep);
                     Console.WriteLine($"\nEnergia({newStep.Numer}) = {obliczonaEnergia}\n");
 
                     steps.Add(newStep);
@@ -118,7 +118,7 @@ namespace ZmsiProjOne
         }
 
 
-        static double EnergiaSync(Matrix w,Matrix I,Matrix x)
+        static double EnergiaSync(Matrix w,Matrix I,ExaminationStep x)
         {
             double suma = 0;
             int n = w.RowCount;
@@ -128,14 +128,14 @@ namespace ZmsiProjOne
             {
                 for (int j = 0; j < n; j++)
                 {
-                    suma += w.GetElement(i, j) * x.GetElement(i, 1) * x.GetElement(j, 0);
+                    suma += w.GetElement(i, j) * x.PotencjalWyjsciowy.GetElement(0, i) * x.PotencjalWejsciowy.GetElement(0, j);
                 }
             }
             suma *= -1;
 
             for (int i = 0; i < n; i++)
             {
-                suma+=I.GetElement(i, 0) * (x.GetElement(i, 1) + x.GetElement(i, 0));
+                suma+=I.GetElement(0,i) * (x.PotencjalWyjsciowy.GetElement(0,i) + x.PotencjalWejsciowy.GetElement(0, i));
             }
 
             return suma;
