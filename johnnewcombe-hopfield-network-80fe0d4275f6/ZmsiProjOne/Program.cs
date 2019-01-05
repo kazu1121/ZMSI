@@ -8,18 +8,60 @@ namespace ZmsiProjOne
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            
+            SynchHopfield();
 
             Console.ReadKey();
         }
 
-        void SynchHopfield()
+        static void SynchHopfield()
         {
-            Matrix matrix = new Matrix(new double[,] { { 1d, 2d, 3d }, { 1d, 2d, 3d }, { 1d, 2d, 3d } });
+            Matrix macierzWag = new Matrix(new double[,] { { 0d, 1d, 2d }, { 1d, 0d, -1d }, { 2d, -1d, 0d } });
             List<Tuple<Matrix, int>> potencjalWejsciowy = new List<Tuple<Matrix, int>>();
 
-            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 0d, 0d, 0d }), 0));            
+            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, -1d, -1d }), 0));
+            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, -1d, 1d }), 0));
+            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, 1d, -1d }), 0));
+            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, 1d, 1d }), 0));
+            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, -1d }), 0));
+            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, 1d }), 0));
+            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, -1d }), 0));
+            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, 1d }), 0));
+
+            for(int i = 0; i < potencjalWejsciowy.Count; i++)
+            {
+                // Jak skończy wszystkie kroki to ustawić na false
+                bool isExamining = true;
+                int stepCounter = 0;
+
+                Console.WriteLine($"\n\n--- Rozpoczęto badanie nr. {i + 1} ---");
+                while(isExamining)
+                {
+                    stepCounter++;
+                    Console.WriteLine($"Badany wektor:");
+                    foreach (var item in potencjalWejsciowy[i].Item1.ToArray())
+                    {
+                        Console.Write(item + ", ");
+                    }
+
+                    Console.WriteLine($"\nKrok: {stepCounter}-------------------");
+                    Console.WriteLine($"Potencjał wejściowy (U):");
+
+                    var obliczonyPotencjalWejsciowy = Matrix.Multiply(potencjalWejsciowy[i].Item1, macierzWag); 
+                    foreach (var item in obliczonyPotencjalWejsciowy.ToArray())
+                    {
+                        Console.Write(item + ", ");
+                    }
+
+                    Console.WriteLine($"\nPotencjał wyjściowy (V):");
+                    foreach (var item in obliczonyPotencjalWejsciowy.ToArray())
+                    {
+                        Console.Write(FunkcjaAktywacjiBiPolarna(item) + ", ");
+                    }
+
+                    // Sprawdzanie warunków
+                    isExamining = false;
+                }
+            }
         }
 
 
@@ -88,7 +130,7 @@ namespace ZmsiProjOne
                 return 1;
         }
 
-        int FunkcjaAktywacjiBiPolarna(double element)
+        static int FunkcjaAktywacjiBiPolarna(double element)
         {
             if (element <= 0)
                 return -1;
