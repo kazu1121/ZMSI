@@ -16,6 +16,7 @@ namespace ZmsiProjOne
         static void SynchHopfield()
         {
             Matrix macierzWag = new Matrix(new double[,] { { 0d, 1d, 2d }, { 1d, 0d, -1d }, { 2d, -1d, 0d } });
+            Matrix macierzI = new Matrix(new double[] { 0.5d, 0.5d, 0.5d });
             List<Tuple<Matrix, int>> potencjalWejsciowy = new List<Tuple<Matrix, int>>();
 
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, -1d, -1d }), 0));
@@ -52,11 +53,19 @@ namespace ZmsiProjOne
                         Console.Write(item + ", ");
                     }
 
+                    List<double> wyjsciowy = new List<double>();
                     Console.WriteLine($"\nPotencjał wyjściowy (V):");
                     foreach (var item in obliczonyPotencjalWejsciowy.ToArray())
                     {
-                        Console.Write(FunkcjaAktywacjiBiPolarna(item) + ", ");
+                        wyjsciowy.Add(FunkcjaAktywacjiBiPolarna(item));
                     }
+                    var potencjalWyjsciowy = new Matrix(wyjsciowy.ToArray());
+
+                    Console.Write(String.Join(",", wyjsciowy));
+
+                    var obliczonaEnergia = 1d;// EnergiaSync(macierzWag, macierzI, new Matrix(new double[,] { potencjalWejsciowy[i].Item1.ToArray(), wyjsciowy.ToArray() }));
+                    Console.WriteLine($"\nEnergia({stepCounter}) = {obliczonaEnergia}\n");
+
 
                     // Sprawdzanie warunków
                     isExamining = false;
@@ -65,7 +74,7 @@ namespace ZmsiProjOne
         }
 
 
-        double EnergiaSync(Matrix w,Matrix I,Matrix x)
+        static double EnergiaSync(Matrix w,Matrix I,Matrix x)
         {
             double suma = 0;
             int n = w.RowCount;
@@ -130,7 +139,7 @@ namespace ZmsiProjOne
                 return 1;
         }
 
-        static int FunkcjaAktywacjiBiPolarna(double element)
+        static double FunkcjaAktywacjiBiPolarna(double element)
         {
             if (element <= 0)
                 return -1;
