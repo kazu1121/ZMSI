@@ -1,0 +1,8 @@
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.Hopfield\bin\Debug\AIF.dll
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.Hopfield\bin\Debug\AIF.pdb
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.Hopfield\obj\Debug\DMU.Hopfield.csprojAssemblyReference.cache
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.Hopfield\obj\Debug\AIF.Resources.ErrorMessages.resources
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.Hopfield\obj\Debug\DMU.Hopfield.csproj.GenerateResource.cache
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.Hopfield\obj\Debug\DMU.Hopfield.csproj.CoreCompileInputs.cache
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.Hopfield\obj\Debug\AIF.dll
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.Hopfield\obj\Debug\AIF.pdb

@@ -1,0 +1,14 @@
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\bin\Debug\AIF.Samples.exe.config
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\bin\Debug\AIF.Samples.exe
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\bin\Debug\AIF.Samples.pdb
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\bin\Debug\AIF.dll
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\bin\Debug\AIF.pdb
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\obj\Debug\DMU.TestGui.csprojAssemblyReference.cache
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\obj\Debug\DMU.Samples.Hopfield.resources
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\obj\Debug\AIF.Samples.Properties.Resources.resources
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\obj\Debug\DMU.Samples.Main.resources
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\obj\Debug\DMU.TestGui.csproj.GenerateResource.cache
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\obj\Debug\DMU.TestGui.csproj.CoreCompileInputs.cache
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\obj\Debug\DMU.TestGui.csproj.CopyComplete
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\obj\Debug\AIF.Samples.exe
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\DMU.TestGui\obj\Debug\AIF.Samples.pdb

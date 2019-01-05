@@ -1,0 +1,11 @@
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\bin\Debug\netcoreapp2.1\ZmsiProjOne.deps.json
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\bin\Debug\netcoreapp2.1\ZmsiProjOne.runtimeconfig.json
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\bin\Debug\netcoreapp2.1\ZmsiProjOne.runtimeconfig.dev.json
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\bin\Debug\netcoreapp2.1\ZmsiProjOne.dll
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\bin\Debug\netcoreapp2.1\ZmsiProjOne.pdb
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\obj\Debug\netcoreapp2.1\ZmsiProjOne.csprojAssemblyReference.cache
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\obj\Debug\netcoreapp2.1\ZmsiProjOne.csproj.CoreCompileInputs.cache
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\obj\Debug\netcoreapp2.1\ZmsiProjOne.AssemblyInfoInputs.cache
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\obj\Debug\netcoreapp2.1\ZmsiProjOne.AssemblyInfo.cs
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\obj\Debug\netcoreapp2.1\ZmsiProjOne.dll
+C:\Users\Adam\Desktop\Studia\johnnewcombe-hopfield-network-80fe0d4275f6\ZmsiProjOne\obj\Debug\netcoreapp2.1\ZmsiProjOne.pdb

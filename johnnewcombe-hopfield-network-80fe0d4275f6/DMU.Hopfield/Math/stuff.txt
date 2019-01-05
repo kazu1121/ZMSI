@@ -1,0 +1,43 @@
+        /// <summary>
+        /// Returns the matrix as a comma delimited string. Uses the default format \"F4\" and the default row seperator CrLf.
+        /// </summary>
+        /// <returns></returns>
+        public new string ToString()
+        {
+            return this.ToString("F4", "\r\n", ",");
+        }
+        /// <summary>
+        /// Returns the matrix with format applied to the numeric values. Uses the default format \"F4\" and the default row seperator CrLf.
+        /// </summary>
+        /// <returns></returns>
+        public string ToString(string format)
+        {
+            return this.ToString("F4", "\r\n", ",");
+        }
+        /// <summary>
+        /// Returns the matrix with format applied to the numeric values and rowDelimiter
+        /// </summary>
+        /// <returns></returns>
+        public string ToString(string format, string rowDelimiter, string columnDelimiter)
+        {
+            StringBuilder toString = new StringBuilder();
+            for (int cell = 0; cell < _matrix.Length; cell++)
+            {
+                toString.Append(_matrix[cell].ToString(format));
+                if ((cell + 1) % this.ColumnCount == 0)
+                {
+                    toString.Append(rowDelimiter);
+                }
+                else
+                {
+                    toString.Append(columnDelimiter);
+                }
+            }
+            string result = toString.ToString();
+
+            //tidy up spaces at the end, any other character is left in place
+            if (result.EndsWith(" "))
+                return result.Trim();
+            else
+                return result;
+        }
