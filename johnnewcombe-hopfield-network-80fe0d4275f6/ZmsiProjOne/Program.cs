@@ -14,9 +14,12 @@ namespace ZmsiProjOne
             Console.ReadKey();
         }
 
-        void SynchHopfield(Matrix matrix)
+        void SynchHopfield()
         {
+            Matrix matrix = new Matrix(new double[,] { { 1d, 2d, 3d }, { 1d, 2d, 3d }, { 1d, 2d, 3d } });
+            List<Tuple<Matrix, int>> potencjalWejsciowy = new List<Tuple<Matrix, int>>();
 
+            potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 0d, 0d, 0d }), 0));            
         }
 
 
