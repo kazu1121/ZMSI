@@ -529,11 +529,10 @@
       ]
     },
     "Microsoft.NETCore.Platforms/2.1.0": {
-      "sha512": "aSTPL94NloSiQVL5Len8wbjFKOnoAX/vOh3s3DF6g3c7GUUMLCDvnBhmA72M2iN2AedyA8hpr7m89kzSAKUnJQ==",
+      "sha512": "TT+QCi9LcxGTjBssH7S7n5+8DVcwfG4DYgXX7Dk7+BfZ4oVHj8Q0CbYk9glzAlHLsSt3bYzol+fOdra2iu6GOw==",
       "type": "package",
       "path": "microsoft.netcore.platforms/2.1.0",
       "files": [
-        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -703,23 +702,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Adam\\.nuget\\packages\\": {},
+    "C:\\Users\\britenet\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Adam\\Desktop\\Studia\\johnnewcombe-hopfield-network-80fe0d4275f6\\ZmsiProjOne\\ZmsiProjOne.csproj",
+      "projectUniqueName": "C:\\Users\\britenet\\Desktop\\Studia\\ZSMI\\johnnewcombe-hopfield-network-80fe0d4275f6\\ZmsiProjOne\\ZmsiProjOne.csproj",
       "projectName": "ZmsiProjOne",
-      "projectPath": "C:\\Users\\Adam\\Desktop\\Studia\\johnnewcombe-hopfield-network-80fe0d4275f6\\ZmsiProjOne\\ZmsiProjOne.csproj",
-      "packagesPath": "C:\\Users\\Adam\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Adam\\Desktop\\Studia\\johnnewcombe-hopfield-network-80fe0d4275f6\\ZmsiProjOne\\obj\\",
+      "projectPath": "C:\\Users\\britenet\\Desktop\\Studia\\ZSMI\\johnnewcombe-hopfield-network-80fe0d4275f6\\ZmsiProjOne\\ZmsiProjOne.csproj",
+      "packagesPath": "C:\\Users\\britenet\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\britenet\\Desktop\\Studia\\ZSMI\\johnnewcombe-hopfield-network-80fe0d4275f6\\ZmsiProjOne\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Adam\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\britenet\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -732,8 +731,8 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "C:\\Users\\Adam\\Desktop\\Studia\\johnnewcombe-hopfield-network-80fe0d4275f6\\DMU.Hopfield\\DMU.Hopfield.csproj": {
-              "projectPath": "C:\\Users\\Adam\\Desktop\\Studia\\johnnewcombe-hopfield-network-80fe0d4275f6\\DMU.Hopfield\\DMU.Hopfield.csproj"
+            "C:\\Users\\britenet\\Desktop\\Studia\\ZSMI\\johnnewcombe-hopfield-network-80fe0d4275f6\\DMU.Hopfield\\DMU.Hopfield.csproj": {
+              "projectPath": "C:\\Users\\britenet\\Desktop\\Studia\\ZSMI\\johnnewcombe-hopfield-network-80fe0d4275f6\\DMU.Hopfield\\DMU.Hopfield.csproj"
             }
           }
         }
