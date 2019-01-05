@@ -27,9 +27,13 @@ namespace ZmsiProjOne
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, 1d }), 0));
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, -1d }), 0));
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, 1d }), 0));
+            List<Examination> listaProb;
             
             for (int i = 0; i < potencjalWejsciowy.Count; i++)
             {
+                var exam = new Examination();
+                exam.potencjalwyjsciowy = potencjalWejsciowy[i].Item1;
+
                 List<ExaminationStep> steps = new List<ExaminationStep>();
                 var newStep = new ExaminationStep()
                 {
@@ -42,6 +46,8 @@ namespace ZmsiProjOne
                 Console.WriteLine($"\n\n--- Rozpoczęto badanie nr. {i + 1} ---");
                 while(isExamining)
                 {
+                    var newStep = new ExaminationStep();
+
                     newStep.Numer = steps.Count;
                     Console.WriteLine($"Badany wektor:");
                     foreach (var item in potencjalWejsciowy[i].Item1.ToArray())
