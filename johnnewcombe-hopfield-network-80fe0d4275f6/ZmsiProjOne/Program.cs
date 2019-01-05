@@ -42,7 +42,10 @@ namespace ZmsiProjOne
                 Console.WriteLine($"\n\n--- Rozpoczęto badanie nr. {i + 1} ---");
                 while(isExamining)
                 {
-                    newStep.Numer = steps.Count;
+                    if (steps.Count > 1)
+                        newStep.PotencjalWejsciowy = steps[steps.Count - 2].PotencjalWyjsciowy;
+
+                    newStep.Numer = steps.Count + 1;
                     Console.WriteLine($"Badany wektor:");
                     foreach (var item in potencjalWejsciowy[i].Item1.ToArray())
                     {
@@ -71,6 +74,7 @@ namespace ZmsiProjOne
                     var obliczonaEnergia = 1d;// EnergiaSync(macierzWag, macierzI, new Matrix(new double[,] { potencjalWejsciowy[i].Item1.ToArray(), wyjsciowy.ToArray() }));
                     Console.WriteLine($"\nEnergia({newStep.Numer}) = {obliczonaEnergia}\n");
 
+                    steps.Add(newStep);
 
                     // Sprawdzanie warunków
                     isExamining = false;
