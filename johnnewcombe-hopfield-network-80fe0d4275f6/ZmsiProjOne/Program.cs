@@ -65,6 +65,44 @@ namespace ZmsiProjOne
         }
 
 
+        static List<Tuple<Matrix, int>> GenerujTablicePotencjalowWejsciowych(int n, bool isSync)
+
+        {
+
+            List<Tuple<Matrix, int>> potencjalWejsciowy = new List<Tuple<Matrix, int>>();
+
+            for (int i = 0; i < Math.Pow(2, n); i++)
+            {
+                var reprezentacjaBianarna = Convert.ToString(i, 2);
+
+                reprezentacjaBianarna = reprezentacjaBianarna.PadLeft(n, '0');
+
+                double[] temp = new double[n];
+
+                for (int j = 0; j < n; j++)
+                {
+                    char tempWartosc;
+
+                    tempWartosc = reprezentacjaBianarna[j];
+
+                    if (tempWartosc == '0')
+                        if (isSync == true)
+                            temp[j] = 0d;
+                        else
+                            temp[j] = -1d;
+                    else
+                        temp[j] = 1d;
+
+                }
+
+                potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(temp), 0));
+            }
+
+            return potencjalWejsciowy;
+
+        }
+
+
         double EnergiaSync(Matrix w,Matrix I,Matrix x)
         {
             double suma = 0;
