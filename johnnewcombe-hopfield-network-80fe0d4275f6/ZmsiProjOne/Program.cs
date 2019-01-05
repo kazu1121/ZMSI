@@ -27,13 +27,9 @@ namespace ZmsiProjOne
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, 1d }), 0));
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, -1d }), 0));
             potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, 1d }), 0));
-            List<Examination> listaProb;
             
             for (int i = 0; i < potencjalWejsciowy.Count; i++)
             {
-                var exam = new Examination();
-                exam.potencjalwyjsciowy = potencjalWejsciowy[i].Item1;
-
                 List<ExaminationStep> steps = new List<ExaminationStep>();
                 var newStep = new ExaminationStep()
                 {
@@ -46,9 +42,10 @@ namespace ZmsiProjOne
                 Console.WriteLine($"\n\n--- Rozpoczęto badanie nr. {i + 1} ---");
                 while(isExamining)
                 {
-                    var newStep = new ExaminationStep();
+                    if (steps.Count > 1)
+                        newStep.PotencjalWejsciowy = steps[steps.Count - 2].PotencjalWyjsciowy;
 
-                    newStep.Numer = steps.Count;
+                    newStep.Numer = steps.Count + 1;
                     Console.WriteLine($"Badany wektor:");
                     foreach (var item in potencjalWejsciowy[i].Item1.ToArray())
                     {
@@ -77,6 +74,7 @@ namespace ZmsiProjOne
                     var obliczonaEnergia = 1d;// EnergiaSync(macierzWag, macierzI, new Matrix(new double[,] { potencjalWejsciowy[i].Item1.ToArray(), wyjsciowy.ToArray() }));
                     Console.WriteLine($"\nEnergia({newStep.Numer}) = {obliczonaEnergia}\n");
 
+                    steps.Add(newStep);
 
                     // Sprawdzanie warunków
                     isExamining = false;
