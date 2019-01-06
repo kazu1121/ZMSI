@@ -7,7 +7,8 @@ namespace ZmsiProjOne
 {
     public class Examination
     {
-        public List<ExaminationStep> ListaKrorkow { get; set;}
+        public Matrix BadanyPunkt { get; set; }
+        public List<ExaminationStep> ListaKrorkow { get; set; }
         public string Wniosek { get; set; }
 
         public Examination()

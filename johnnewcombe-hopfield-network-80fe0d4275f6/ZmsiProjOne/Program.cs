@@ -20,7 +20,7 @@ namespace ZmsiProjOne
 
             var network = new Network(GenerujTablicePotencjalowWejsciowych(2, false));
 
-            for (int i = 0; i < network.TablicaPotencjalowWejsciowych.Count; i++)
+            for (int i = 0; i < network.BadanePunkty.Count; i++)
             {
                 var noweBadanie = new Examination();
                 var nowyKrok = new ExaminationStep();
@@ -36,7 +36,7 @@ namespace ZmsiProjOne
                     if (noweBadanie.ListaKrorkow.Count > 0)
                         nowyKrok.PotencjalWejsciowy = noweBadanie.ListaKrorkow[noweBadanie.ListaKrorkow.Count - 1].PotencjalWyjsciowy;
                     else
-                        nowyKrok.PotencjalWejsciowy = network.TablicaPotencjalowWejsciowych[i];
+                        nowyKrok.PotencjalWejsciowy = network.BadanePunkty[i].BadanyPunkt;
 
                     Console.WriteLine($"\nKrok: {nowyKrok.Numer}-------------------");
 
@@ -44,7 +44,7 @@ namespace ZmsiProjOne
                     Console.Write(String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray()));
 
                     Console.Write($"\nPotencjał wejściowy (U): ");
-                    nowyKrok.ObliczonyPotencjalWejsciowy = Matrix.Multiply(network.TablicaPotencjalowWejsciowych[i], macierzWag);
+                    nowyKrok.ObliczonyPotencjalWejsciowy = Matrix.Multiply(network.BadanePunkty[i].BadanyPunkt, macierzWag);
                     Console.Write(String.Join(',', nowyKrok.ObliczonyPotencjalWejsciowy.ToArray()));
 
                     Console.Write($"\nPotencjał wyjściowy (V): ");
@@ -78,7 +78,7 @@ namespace ZmsiProjOne
                     noweBadanie.ListaKrorkow.Add(nowyKrok);
                 }
 
-                network.Badania.Add(noweBadanie);
+                network.BadanePunkty[i] = noweBadanie;
                 Console.WriteLine($"Wniosek: {noweBadanie.Wniosek}");
             }
         }
