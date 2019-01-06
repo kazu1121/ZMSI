@@ -7,6 +7,14 @@ namespace ZmsiProjOne
 {
     public class Examination
     {
-        public Matrix PotencjalWejsciowy { get; set; }
+        public List<ExaminationStep> listaKrorkow { get; set;}
+        public Matrix potencjalwyjsciowy { get; set; }
+
+        public Examination()
+        {
+
+        }
+       
+
     }
 }
