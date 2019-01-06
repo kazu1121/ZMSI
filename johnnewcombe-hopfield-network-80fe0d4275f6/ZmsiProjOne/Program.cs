@@ -78,7 +78,7 @@ namespace ZmsiProjOne
             }
         }
 
-        static List<Matrix> GenerujTablicePotencjalowWejsciowych(int n, bool isSync)
+        public static List<Matrix> GenerujTablicePotencjalowWejsciowych(int n, bool isSync)
         {
 
             List<Matrix> potencjalWejsciowy = new List<Matrix>();
@@ -171,7 +171,7 @@ namespace ZmsiProjOne
 
         }
 
-        int FunkcjaAktywacjiPolarna(double element)
+        public static double FunkcjaAktywacjiPolarna(double element)
         {
             if (element <= 0)
                 return 0;
@@ -179,7 +179,7 @@ namespace ZmsiProjOne
                 return 1;
         }
 
-        static double FunkcjaAktywacjiBiPolarna(double element)
+        public static double FunkcjaAktywacjiBiPolarna(double element)
         {
             if (element <= 0)
                 return -1;
