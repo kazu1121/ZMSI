@@ -8,7 +8,11 @@ namespace ZmsiProjOne
     public class Examination
     {
         public Matrix BadanyPunkt { get; set; }
+        public bool? CzyPunktStaly { get; set; }
+        public Examination PunktDoKtoregoZbiega { get; set; }
+        public List<Examination> Cykl { get; set; }
         public List<ExaminationStep> ListaKrorkow { get; set; }
+
         /*
          * s- staly
          * c* = cykl (* to numer cyklu)
@@ -19,6 +23,7 @@ namespace ZmsiProjOne
         public Examination()
         {
             ListaKrorkow = new List<ExaminationStep>();
+            Cykl = new List<Examination>();
         }
 
         public override string ToString()

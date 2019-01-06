@@ -9,96 +9,180 @@ namespace ZmsiProjOne
     {
         static void Main(string[] args)
         {
-            //SynchHopfield();
-            HopfieldAsync ha = new HopfieldAsync();
-            Matrix w = new Matrix(new double[,] { { 0d, 2d,-1d }, { 2d, 0d,1d }, { -1d, 1d, 0d } });
-            ha.runHopfield(w,new int[] { 0, 2, 1 }, true);
+            var network = new Network(GenerujTablicePotencjalowWejsciowych(2, true));
 
-            Console.Write(ha.network.ToString());
+            SynchHopfield(network);
+            network.WyswietlPrzebiegNaKonsoli();
 
             Console.ReadKey();
         }
 
-        static void SynchHopfield()
+        static void SynchHopfield(Network network)
         {
             Matrix macierzWag = new Matrix(new double[,] { { 0d, 4d }, { 4d, 0d } });
             Matrix macierzI = new Matrix(new double[] { 0d, 0d });
 
-            var network = new Network(GenerujTablicePotencjalowWejsciowych(2, true));
 
             for (int i = 0; i < network.BadanePunkty.Count; i++)
             {
-                var noweBadanie = network.BadanePunkty[i];
-                var nowyKrok = new ExaminationStep();
-
-                // Jak skończy wszystkie kroki to ustawić na false
                 bool isExamining = true;
+                var noweBadanie = network.BadanePunkty[i];
 
-                Console.WriteLine($"\n----------------------------------------------------\n--- Rozpoczęto badanie nr. {i + 1} ---\n----------------------------------------------------");
                 while (isExamining)
                 {
+                    var nowyKrok = new ExaminationStep();
                     nowyKrok.Numer = noweBadanie.ListaKrorkow.Count + 1;
 
+                    // Ustawienie potencjału wejściowego
                     if (noweBadanie.ListaKrorkow.Count > 0)
                         nowyKrok.PotencjalWejsciowy = noweBadanie.ListaKrorkow[noweBadanie.ListaKrorkow.Count - 1].PotencjalWyjsciowy;
                     else
                         nowyKrok.PotencjalWejsciowy = network.BadanePunkty[i].BadanyPunkt;
 
-                    Console.WriteLine($"\nKrok: {nowyKrok.Numer}-------------------");
+                    // Sprawdzanie czy wpadliśmy w cykl
+                    if (noweBadanie.ListaKrorkow.Any(x => x.PotencjalWejsciowy.AreMatrixesEquals(nowyKrok.PotencjalWejsciowy)))
+                    {
+                        isExamining = false;
+                        continue;
+                    }
 
-                    Console.Write($"Badany wektor: ");
-                    Console.Write(String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray()));
-
-                    Console.Write($"\nPotencjał wejściowy (U): ");
+                    // Obliczenie potencjału wejściowego dla funkcji aktywacji
                     nowyKrok.ObliczonyPotencjalWejsciowy = Matrix.Add(Matrix.Multiply(nowyKrok.PotencjalWejsciowy, macierzWag), macierzI);
-                    Console.Write(String.Join(',', nowyKrok.ObliczonyPotencjalWejsciowy.ToArray()));
 
-                    Console.Write($"\nPotencjał wyjściowy (V): ");
+                    // Obliczenie potencjału wyjściowego
                     List<double> wyjsciowy = new List<double>();
                     foreach (var item in nowyKrok.ObliczonyPotencjalWejsciowy.ToArray())
                     {
                         wyjsciowy.Add(FunkcjaAktywacjiPolarna(item));
                     }
                     nowyKrok.PotencjalWyjsciowy = new Matrix(wyjsciowy.ToArray());
-                    Console.Write(String.Join(",", wyjsciowy));
 
-                    var obliczonaEnergia = EnergiaSync(macierzWag, macierzI, nowyKrok);
-                    Console.WriteLine($"\nEnergia({nowyKrok.Numer}) = {obliczonaEnergia}\n");
+                    // Obliczenie energii
+                    nowyKrok.Energia = EnergiaSync(macierzWag, macierzI, nowyKrok);
 
                     // Sprawdzanie warunków stopu badania
-                    var punktDoKtoregoZbiega = network.BadanePunkty.FirstOrDefault(x => x.BadanyPunkt.AreMatrixesEquals(nowyKrok.PotencjalWyjsciowy));
+                    var punktDoKtoregoZbiega = network
+                        .BadanePunkty
+                        .FirstOrDefault(x => 
+                                        x.BadanyPunkt.AreMatrixesEquals(nowyKrok.PotencjalWyjsciowy)
+                                        && !noweBadanie.BadanyPunkt.AreMatrixesEquals(x.BadanyPunkt));
 
                     if (nowyKrok.PotencjalWejsciowy.AreMatrixesEquals(nowyKrok.PotencjalWyjsciowy))
                     { // Punkt stały
-                        Console.WriteLine("1) Sieć podczas działania wyprodukowała taki sam wektor jaki trafił na wejście w kroku T");
                         isExamining = false;
-
-                        if (noweBadanie.ListaKrorkow.Count == 0)
-                            noweBadanie.Wniosek = $"Punkt {String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray())} jest stały.";
+                        noweBadanie.CzyPunktStaly = true;
                     }
                     else if (noweBadanie.ListaKrorkow.Count > 0
                         && nowyKrok.PotencjalWejsciowy == nowyKrok.PotencjalWyjsciowy
                         && nowyKrok.Energia == noweBadanie.ListaKrorkow[noweBadanie.ListaKrorkow.Count - 1].Energia
                         && macierzWag.IsSymetric())
                     {
+                        noweBadanie.CzyPunktStaly = false;
                         isExamining = false;
-                        Console.WriteLine("Wyprodukowana przez sieć wartość energii jest równa w dwóch kolejnych krokach jej działania (warunek ten należy sprawdzać przy założeniu, że macierz wag jest symetryczna!).");
+                        //Console.WriteLine("Wyprodukowana przez sieć wartość energii jest równa w dwóch kolejnych krokach jej działania (warunek ten należy sprawdzać przy założeniu, że macierz wag jest symetryczna!).");
                     }
                     else if (punktDoKtoregoZbiega != null)
-                    { // Punkt zbiega do innego punktu
-                        isExamining = false;
-                        noweBadanie.Wniosek = $"Punkt {String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray())} zbiega do punktu {String.Join(',', punktDoKtoregoZbiega.BadanyPunkt.ToArray())}.";
-                        //noweBadanie.PunktDoKtoregoZbiega = punktDoKtoregoZbiega;
-
-                        // Wykrywanie cyklu
-                        //if (punktDoKtoregoZbiega.PunktDoKtoregoZbiega != null && )
+                    {// Ustawienie punktu do którego zbiega (Sprawdzanie cykli i ustawianie wniosków odbywa się po wszystkich obliczeniach wszystkich badań)
+                        noweBadanie.CzyPunktStaly = false;
+                        noweBadanie.PunktDoKtoregoZbiega = punktDoKtoregoZbiega;
                     }
-
                     noweBadanie.ListaKrorkow.Add(nowyKrok);
                 }
 
                 network.BadanePunkty[i] = noweBadanie;
-                Console.WriteLine($"Wniosek: {noweBadanie.Wniosek}");
+            }
+
+            UstawWyniki(network);
+        }
+
+        public static void UstawWyniki(Network network)
+        {
+            SprawdzCykle(network.BadanePunkty);
+            UstawWnioski(network);
+        }
+
+        public static void UstawWnioski(Network network)
+        {
+            foreach (var badanyPunkt in network.BadanePunkty)
+            {
+                if(badanyPunkt.CzyPunktStaly.HasValue && badanyPunkt.CzyPunktStaly.Value == true)
+                {// Punkt stały
+                    badanyPunkt.Wniosek = $"Punkt [{String.Join(" ", badanyPunkt.BadanyPunkt.ToArray())}] jest stały!";
+                }
+                else if(badanyPunkt.Cykl.Any())
+                { // Tworzy cykl
+                    List<string> punktyCyklu = new List<string>();
+                    foreach (var krokCyklu in badanyPunkt.Cykl)
+                    {
+                        punktyCyklu.Add($"[{String.Join($" ", krokCyklu.BadanyPunkt.ToArray())}]");
+                    }
+
+                    badanyPunkt.Wniosek = $"Punkt [{String.Join(" ", badanyPunkt.BadanyPunkt.ToArray())}] tworzy cykl: {String.Join(" -> ", punktyCyklu)}";
+                }
+                else if (badanyPunkt.PunktDoKtoregoZbiega != null)
+                {
+                    if(!badanyPunkt.PunktDoKtoregoZbiega.Cykl.Any())
+                    {// Wpada w cykl
+                        List<string> punktyCyklu = new List<string>();
+                        foreach (var krokCyklu in badanyPunkt.PunktDoKtoregoZbiega.Cykl)
+                        {
+                            punktyCyklu.Add($"[{String.Join($" ", krokCyklu.BadanyPunkt.ToArray())}]");
+                        }
+                        badanyPunkt.Wniosek = $"Punkt [{String.Join(" ", badanyPunkt.BadanyPunkt.ToArray())}] wpada w cykl: {String.Join(" -> ", punktyCyklu)}";
+                    }
+                    else
+                    {// Zbiega do punktu
+                        badanyPunkt.Wniosek = $"Punkt [{String.Join(" ", badanyPunkt.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", badanyPunkt.PunktDoKtoregoZbiega.BadanyPunkt.ToArray())}";
+                    }
+                }
+            }
+        }
+
+        public static void SprawdzCykle(List<Examination> badanePunkty)
+        {
+            foreach (var badanyPunkt in badanePunkty)
+            {
+                List<Examination> potencjalnyCykl = new List<Examination>();
+                Rekurencja(badanyPunkt.PunktDoKtoregoZbiega, potencjalnyCykl, badanePunkty.Count);
+                if (potencjalnyCykl.Any(x => x.BadanyPunkt.AreMatrixesEquals(badanyPunkt.BadanyPunkt)))
+                    badanyPunkt.Cykl = new List<Examination>(potencjalnyCykl);
+            }
+        }
+
+        public static void Rekurencja(Examination punktReferujacyDalej, List<Examination> wykrytyCykl, int maksymalnaMocCyklu)
+        {
+            if (punktReferujacyDalej == null || maksymalnaMocCyklu == 0 || wykrytyCykl.Any(x => x.BadanyPunkt.AreMatrixesEquals(punktReferujacyDalej.BadanyPunkt)))
+                return;
+
+            wykrytyCykl.Add(punktReferujacyDalej);
+
+            Rekurencja(punktReferujacyDalej.PunktDoKtoregoZbiega, wykrytyCykl, --maksymalnaMocCyklu);
+        }
+
+        public static void CzyNadalBadac(Examination examination)
+        {
+            if (examination.PunktDoKtoregoZbiega == null)
+                return;
+
+            if (examination.PunktDoKtoregoZbiega.PunktDoKtoregoZbiega.BadanyPunkt.AreMatrixesEquals(examination.BadanyPunkt))
+            {// Punkty zbiegają do siebie nawzajem
+                if (!examination.PunktDoKtoregoZbiega.Cykl.Any())
+                {// Nie było wcześniej cyklu
+                    examination.Cykl.Add(examination);
+                    examination.Cykl.Add(examination.PunktDoKtoregoZbiega);
+                    examination.Wniosek = $"Tworzy cykl {String.Join(',', examination.BadanyPunkt.ToArray())} ->  {String.Join(',', examination.PunktDoKtoregoZbiega.BadanyPunkt.ToArray())}";
+
+                    examination.PunktDoKtoregoZbiega.PunktDoKtoregoZbiega = examination;
+                    examination.PunktDoKtoregoZbiega.Cykl.Add(examination.PunktDoKtoregoZbiega);
+                    examination.PunktDoKtoregoZbiega.Cykl.Add(examination);
+                    examination.PunktDoKtoregoZbiega.Wniosek = $"Tworzy cykl {String.Join(',', examination.PunktDoKtoregoZbiega.BadanyPunkt.ToArray())} ->  {String.Join(',', examination.BadanyPunkt.ToArray())}";
+                }
+                else
+                {
+                    examination.Cykl = examination.PunktDoKtoregoZbiega.Cykl;
+                    examination.PunktDoKtoregoZbiega.Wniosek = $"Tworzy cykl {String.Join(',', examination.BadanyPunkt.ToArray())} ->  {String.Join(',', examination.PunktDoKtoregoZbiega.BadanyPunkt.ToArray())}";
+                }
+                return;
             }
         }
 

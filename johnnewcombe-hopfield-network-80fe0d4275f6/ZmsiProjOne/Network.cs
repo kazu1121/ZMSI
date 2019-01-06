@@ -22,6 +22,25 @@ namespace ZmsiProjOne
             }
         }
 
+        public void WyswietlPrzebiegNaKonsoli()
+        {
+            for (int i = 0; i < BadanePunkty.Count; i++)
+            {
+                Console.WriteLine($"\n----------------------------------------------------\n------------- Rozpoczęto badanie nr. {i + 1} -------------\n----------------------------------------------------");
+                Console.WriteLine($"Badany wektor: {String.Join(" ", BadanePunkty[i].BadanyPunkt.ToArray())}\n");
+
+                for (int j = 0; j < BadanePunkty[i].ListaKrorkow.Count; j++)
+                {
+                    Console.WriteLine($"Krok: {BadanePunkty[i].ListaKrorkow[j].Numer} -------------------");
+                    Console.WriteLine($"Potencjał wejściowy (U): {String.Join(" ", BadanePunkty[i].ListaKrorkow[j].ObliczonyPotencjalWejsciowy.ToArray())}");
+                    Console.WriteLine($"Potencjał wyjściowy (V): {String.Join(" ", BadanePunkty[i].ListaKrorkow[j].PotencjalWyjsciowy.ToArray())}");
+
+                    Console.WriteLine($"\nEnergia({j + 1}) = {BadanePunkty[i].ListaKrorkow[j].Energia}\n");
+                }
+
+                Console.WriteLine($"Wniosek: {BadanePunkty[i].Wniosek}");
+            }
+        }
 
         public override string ToString()
         {
@@ -29,7 +48,7 @@ namespace ZmsiProjOne
 
             foreach (var item in BadanePunkty)
             {
-                wyjscie += item.ToString()+"\n";
+                wyjscie += item.ToString() + "\n";
 
             }
 
