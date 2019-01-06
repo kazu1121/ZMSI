@@ -60,10 +60,14 @@ namespace ZmsiProjOne
 
 
                     // Sprawdzanie warunków stopu kroku
-                    if (Matrix.Equals(nowyKrok.PotencjalWejsciowy, nowyKrok.PotencjalWyjsciowy))
+                    //if (Matrix.Equals(nowyKrok.PotencjalWejsciowy, nowyKrok.PotencjalWyjsciowy))
+                    if (nowyKrok.PotencjalWejsciowy.AreMatrixesEquals(nowyKrok.PotencjalWyjsciowy))
                     {
                         Console.WriteLine("1) Sieć podczas działania wyprodukowała taki sam wektor jaki trafił na wejście w kroku T");
                         isExamining = false;
+
+                        if (noweBadanie.ListaKrorkow.Count == 0)
+                            noweBadanie.Wniosek = $"Punkt {String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray())} jest stały.";
                     }
                     //else if (noweBadanie.ListaKrorkow.Count > 0 && nowyKrok.PotencjalWejsciowy == nowyKrok.PotencjalWyjsciowy && nowyKrok.Energia == noweBadanie.ListaKrorkow[noweBadanie.ListaKrorkow.Count - 1].Energia && MacierzWagJestSymetryczna)
                     //{
@@ -75,10 +79,11 @@ namespace ZmsiProjOne
                 }
 
                 network.Badania.Add(noweBadanie);
+                Console.WriteLine($"Wniosek: {noweBadanie.Wniosek}");
             }
         }
 
-        static List<Matrix> GenerujTablicePotencjalowWejsciowych(int n, bool isSync)
+        static List<Matrix> GenerujTablicePotencjalowWejsciowych(int n, bool isUnipolarna)
         {
 
             List<Matrix> potencjalWejsciowy = new List<Matrix>();
@@ -98,7 +103,7 @@ namespace ZmsiProjOne
                     tempWartosc = reprezentacjaBianarna[j];
 
                     if (tempWartosc == '0')
-                        if (isSync == true)
+                        if (isUnipolarna == true)
                             temp[j] = 0d;
                         else
                             temp[j] = -1d;
