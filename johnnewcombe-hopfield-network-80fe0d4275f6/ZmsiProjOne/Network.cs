@@ -7,13 +7,19 @@ namespace ZmsiProjOne
 {
     public class Network
     {
-        public List<Matrix> TablicaPotencjalowWejsciowych { get; set; }
-        public List<Examination> Badania { get; set; }
+        public List<Examination> BadanePunkty { get; set; }
 
         public Network(List<Matrix> tablicaPotencjalowWejsciowych)
         {
-            TablicaPotencjalowWejsciowych = tablicaPotencjalowWejsciowych;
-            Badania = new List<Examination>();
+            BadanePunkty = new List<Examination>();
+
+            foreach (var item in tablicaPotencjalowWejsciowych)
+            {
+                BadanePunkty.Add(new Examination()
+                {
+                    BadanyPunkt = item
+                });
+            }
         }
     }
 }
