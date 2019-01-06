@@ -16,82 +16,72 @@ namespace ZmsiProjOne
         static void SynchHopfield()
         {
             Matrix macierzWag = new Matrix(new double[,] { { 0d, 1d }, { -0.5d, 0d } });
-            Matrix macierzI = new Matrix(new double[] { 0d,0d });
-            //List<Tuple<Matrix, int>> potencjalWejsciowy = new List<Tuple<Matrix, int>>();
-            var potencjalWejsciowy = GenerujTablicePotencjalowWejsciowych(2, false);
-            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, -1d, -1d }), 0));
-            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, -1d, 1d }), 0));
-            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, 1d, -1d }), 0));
-            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { -1d, 1d, 1d }), 0));
-            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, -1d }), 0));
-            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, -1d, 1d }), 0));
-            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, -1d }), 0));
-            //potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(new double[] { 1d, 1d, 1d }), 0));
+            Matrix macierzI = new Matrix(new double[] { 0.5d, 0.5d });
 
-            for (int i = 0; i < potencjalWejsciowy.Count; i++)
+            var network = new Network(GenerujTablicePotencjalowWejsciowych(2, false));
+
+            for (int i = 0; i < network.TablicaPotencjalowWejsciowych.Count; i++)
             {
-                List<ExaminationStep> steps = new List<ExaminationStep>();
-                var newStep = new ExaminationStep()
-                {
-                    PotencjalWejsciowy = potencjalWejsciowy[i].Item1
-                };
+                var noweBadanie = new Examination();
+                var nowyKrok = new ExaminationStep();
 
                 // Jak skończy wszystkie kroki to ustawić na false
                 bool isExamining = true;
 
                 Console.WriteLine($"\n\n--- Rozpoczęto badanie nr. {i + 1} ---");
-                while(isExamining)
+                while (isExamining)
                 {
-                    newStep.Numer = steps.Count + 1;
+                    nowyKrok.Numer = noweBadanie.ListaKrorkow.Count + 1;
 
-                    if (steps.Count > 0)
-                        newStep.PotencjalWejsciowy = steps[steps.Count - 1].PotencjalWyjsciowy;
+                    if (noweBadanie.ListaKrorkow.Count > 0)
+                        nowyKrok.PotencjalWejsciowy = noweBadanie.ListaKrorkow[noweBadanie.ListaKrorkow.Count - 1].PotencjalWyjsciowy;
+                    else
+                        nowyKrok.PotencjalWejsciowy = network.TablicaPotencjalowWejsciowych[i];
 
                     Console.WriteLine($"Badany wektor:");
-                    Console.Write(String.Join(',', potencjalWejsciowy[i].Item1.ToArray()));
+                    Console.Write(String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray()));
 
-                    Console.WriteLine($"\nKrok: {newStep.Numer}-------------------");
+                    Console.WriteLine($"\nKrok: {nowyKrok.Numer}-------------------");
                     Console.WriteLine($"Potencjał wejściowy (U):");
-
-                    newStep.ObliczonyPotencjalWejsciowy = Matrix.Multiply(potencjalWejsciowy[i].Item1, macierzWag);
-                    Console.Write(String.Join(',', newStep.ObliczonyPotencjalWejsciowy.ToArray()));
+                    nowyKrok.ObliczonyPotencjalWejsciowy = Matrix.Multiply(network.TablicaPotencjalowWejsciowych[i], macierzWag);
+                    Console.Write(String.Join(',', nowyKrok.ObliczonyPotencjalWejsciowy.ToArray()));
 
                     Console.WriteLine($"\nPotencjał wyjściowy (V):");
                     List<double> wyjsciowy = new List<double>();
-                    foreach (var item in newStep.ObliczonyPotencjalWejsciowy.ToArray())
+                    foreach (var item in nowyKrok.ObliczonyPotencjalWejsciowy.ToArray())
                     {
                         wyjsciowy.Add(FunkcjaAktywacjiBiPolarna(item));
                     }
-                    newStep.PotencjalWyjsciowy = new Matrix(wyjsciowy.ToArray());
-
+                    nowyKrok.PotencjalWyjsciowy = new Matrix(wyjsciowy.ToArray());
                     Console.Write(String.Join(",", wyjsciowy));
 
-                    var obliczonaEnergia = EnergiaSync(macierzWag, macierzI,newStep);
-                    Console.WriteLine($"\nEnergia({newStep.Numer}) = {obliczonaEnergia}\n");
+                    var obliczonaEnergia = EnergiaSync(macierzWag, macierzI, nowyKrok);
+                    Console.WriteLine($"\nEnergia({nowyKrok.Numer}) = {obliczonaEnergia}\n");
 
 
                     // Sprawdzanie warunków stopu kroku
-                    if (Matrix.Equals(newStep.PotencjalWejsciowy, newStep.PotencjalWyjsciowy))
+                    if (Matrix.Equals(nowyKrok.PotencjalWejsciowy, nowyKrok.PotencjalWyjsciowy))
                     {
                         Console.WriteLine("1) Sieć podczas działania wyprodukowała taki sam wektor jaki trafił na wejście w kroku T");
                         isExamining = false;
                     }
-                    //else if (steps.Count > 0 && newStep.PotencjalWejsciowy == newStep.PotencjalWyjsciowy && newStep.Energia == steps[steps.Count - 1].Energia && MacierzWagJestSymetryczna)
+                    //else if (noweBadanie.ListaKrorkow.Count > 0 && nowyKrok.PotencjalWejsciowy == nowyKrok.PotencjalWyjsciowy && nowyKrok.Energia == noweBadanie.ListaKrorkow[noweBadanie.ListaKrorkow.Count - 1].Energia && MacierzWagJestSymetryczna)
                     //{
                     //    Console.WriteLine("Wyprodukowana przez sieć wartość energii jest równa w dwóch kolejnych krokach jej działania (warunek ten należy sprawdzać przy założeniu, że macierz wag jest symetryczna!).");
                     //    isExamining = false;
                     //}
 
-                    steps.Add(newStep);
-                    //isExamining = false;
+                    noweBadanie.ListaKrorkow.Add(nowyKrok);
                 }
+
+                network.Badania.Add(noweBadanie);
             }
         }
 
-        static List<Tuple<Matrix, int>> GenerujTablicePotencjalowWejsciowych(int n, bool isSync)
+        static List<Matrix> GenerujTablicePotencjalowWejsciowych(int n, bool isSync)
         {
 
-            List<Tuple<Matrix, int>> potencjalWejsciowy = new List<Tuple<Matrix, int>>();
+            List<Matrix> potencjalWejsciowy = new List<Matrix>();
 
             for (int i = 0; i < Math.Pow(2, n); i++)
             {
@@ -117,14 +107,14 @@ namespace ZmsiProjOne
 
                 }
 
-                potencjalWejsciowy.Add(new Tuple<Matrix, int>(new Matrix(temp), 0));
+                potencjalWejsciowy.Add(new Matrix(temp));
             }
 
             return potencjalWejsciowy;
         }
 
 
-        static double EnergiaSync(Matrix w,Matrix I,ExaminationStep x)
+        static double EnergiaSync(Matrix w, Matrix I, ExaminationStep x)
         {
             double suma = 0;
             int n = w.RowCount;
@@ -141,7 +131,7 @@ namespace ZmsiProjOne
 
             for (int i = 0; i < n; i++)
             {
-                suma+=I.GetElement(0,i) * (x.PotencjalWyjsciowy.GetElement(0,i) + x.PotencjalWejsciowy.GetElement(0, i));
+                suma += I.GetElement(0, i) * (x.PotencjalWyjsciowy.GetElement(0, i) + x.PotencjalWejsciowy.GetElement(0, i));
             }
 
             return suma;
@@ -149,7 +139,7 @@ namespace ZmsiProjOne
         }
 
 
-        double EnergiaAsync(Matrix w,Matrix x)
+        double EnergiaAsync(Matrix w, Matrix x)
         {
             double suma = 0;
             int n = w.RowCount;
@@ -174,7 +164,7 @@ namespace ZmsiProjOne
         {
             double roznica = 0;
 
-            int liczbaElementow= e.Count;
+            int liczbaElementow = e.Count;
 
             roznica = e[liczbaElementow - 1] - e[liczbaElementow - 2];
             return roznica;
@@ -183,7 +173,7 @@ namespace ZmsiProjOne
 
         int FunkcjaAktywacjiPolarna(double element)
         {
-            if(element <=0)
+            if (element <= 0)
                 return 0;
             else
                 return 1;
@@ -194,9 +184,8 @@ namespace ZmsiProjOne
             if (element <= 0)
                 return -1;
             else
-                return 1;   
+                return 1;
         }
-
 
     }
 }
