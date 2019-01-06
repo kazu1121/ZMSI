@@ -8,22 +8,25 @@ namespace ZmsiProjOne
 {
     class HopfieldAsync
     {
-        private Network network;
+        public Network network { get; set; }
+        private int[] sekwencja;
 
 
 
 
-        public void runHopfield(Matrix w,bool isFunkcjaAktywacjiUnipolarna = true)
+        public void runHopfield(Matrix w, int[] Sekwencja,bool isFunkcjaAktywacjiUnipolarna = true)
         {
+            sekwencja = Sekwencja;
+
             network = new Network(Program.GenerujTablicePotencjalowWejsciowych(w.ColumnCount,isFunkcjaAktywacjiUnipolarna));
 
             foreach (var item in network.BadanePunkty)
             {
-
-
+                if (item.Wniosek == "")
+                {
+                    oblicz(w, item, isFunkcjaAktywacjiUnipolarna);
+                }
             }
-
-
         }
         
 
@@ -38,6 +41,7 @@ namespace ZmsiProjOne
             listaWystapionychWektorow.Add(examination.ListaKrorkow[0].PotencjalWejsciowy);
             for (int i = 0; i < examination.ListaKrorkow.Count; i++)
             {
+                // sprawdzamy czy v(t) i  v(t-1) sa takie same
                 if (listaWystapionychWektorow[listaWystapionychWektorow.Count - 1].AreMatrixesEquals(examination.ListaKrorkow[i].PotencjalWyjsciowy))
                 {
                     licznikCykluTegoSamegoVektora++;
@@ -74,16 +78,14 @@ namespace ZmsiProjOne
 
                         }
                         return true;
-
                     }
-
                 }
                 else
                 {
                     var indexPowtarzajacego = listaWystapionychWektorow.FindIndex(0, x => x == examination.ListaKrorkow[i].PotencjalWyjsciowy);
                     
 
-                    if (indexPowtarzajacego > 0)
+                    if (indexPowtarzajacego >= 0)
                     {
                         /// teraz petla od ostatniego do ostatniego ktory sie powtorzyl...
                         for (int j = indexPowtarzajacego + 1; j < listaWystapionychWektorow.Count; j++)
@@ -111,11 +113,11 @@ namespace ZmsiProjOne
 
 
 
-        public void hopfieldAsync(Matrix w, Examination examination, bool isFunkcjaAktywackiUnipolarna)
+        public void oblicz(Matrix w, Examination examination, bool isFunkcjaAktywackiUnipolarna)
         {
             int n = w.ColumnCount;
-            var sekwencja = setSekwencja(n);
             int iteratorSekwencji = 0;
+            int ineratorStep = 1;
 
 
 
@@ -124,6 +126,8 @@ namespace ZmsiProjOne
 
             do
             {
+                tempExaminationStep.Numer = ineratorStep;
+                ineratorStep++;
 
                 tempExaminationStep.ObliczonyPotencjalWejsciowy = Matrix.Multiply(tempExaminationStep.PotencjalWejsciowy, w);
 
@@ -166,7 +170,7 @@ namespace ZmsiProjOne
                 }
 
 
-            } while (checkExaminationAsync(n,examination));
+            } while (!checkExaminationAsync(n,examination));
 
 
 
@@ -174,18 +178,6 @@ namespace ZmsiProjOne
 
 
         }
-
-
-        public double[] setSekwencja(int n)
-        {
-            double[] sekwencja = new double[n];
-
-            for (int i = 0; i < n; i++)
-            {
-                sekwencja[i] = i;
-            }
-            return sekwencja;
-
-        }
+        
     }
 }

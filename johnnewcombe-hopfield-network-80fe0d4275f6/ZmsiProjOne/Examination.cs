@@ -23,7 +23,7 @@ namespace ZmsiProjOne
 
         public override string ToString()
         {
-            string wyjscie = "-----------------------------------------\n";
+            string wyjscie = "\n-----------------------------------------\n";
             wyjscie += "Badanie punktu: "+BadanyPunkt.ToString()+"\n";
 
             foreach (var item in ListaKrorkow)
@@ -31,7 +31,7 @@ namespace ZmsiProjOne
                 wyjscie += item.ToString();
             }
 
-            wyjscie += $"Wniosek:\t{wyjscie}\n";
+            wyjscie += $"Wniosek! Punkt:[{BadanyPunkt.ToString()}] zbiega do punktu:\t{Wniosek}\n";
 
             return wyjscie;
         }

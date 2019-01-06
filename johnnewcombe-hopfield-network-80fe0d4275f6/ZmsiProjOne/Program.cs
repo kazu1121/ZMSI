@@ -9,7 +9,12 @@ namespace ZmsiProjOne
     {
         static void Main(string[] args)
         {
-            SynchHopfield();
+            //SynchHopfield();
+            HopfieldAsync ha = new HopfieldAsync();
+            Matrix w = new Matrix(new double[,] { { 0d, 2d,-1d }, { 2d, 0d,1d }, { -1d, 1d, 0d } });
+            ha.runHopfield(w,new int[] { 0, 2, 1 }, true);
+
+            Console.Write(ha.network.ToString());
 
             Console.ReadKey();
         }
@@ -153,7 +158,7 @@ namespace ZmsiProjOne
         }
 
 
-        double EnergiaAsync(Matrix w, Matrix x)
+        public double EnergiaAsync(Matrix w, ExaminationStep e)
         {
             double suma = 0;
             int n = w.RowCount;
@@ -162,7 +167,7 @@ namespace ZmsiProjOne
             {
                 for (int j = 0; j < n; j++)
                 {
-                    suma += w.GetElement(i, j) * x.GetElement(i, 0) * x.GetElement(j, 0);
+                    suma += w.GetElement(i, j) * e.PotencjalWejsciowy.GetElement(0,i) * e.PotencjalWyjsciowy.GetElement(0,j);
                 }
 
             }
