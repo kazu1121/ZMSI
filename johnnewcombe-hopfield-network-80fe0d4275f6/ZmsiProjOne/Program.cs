@@ -17,7 +17,7 @@ namespace ZmsiProjOne
         static void SynchHopfield()
         {
             Matrix macierzWag = new Matrix(new double[,] { { 0d, 4d }, { 4d, 0d } });
-            Matrix macierzI = new Matrix(new double[] { 0.5d, 0.5d });
+            Matrix macierzI = new Matrix(new double[] { 0d, 0d });
 
             var network = new Network(GenerujTablicePotencjalowWejsciowych(2, true));
 
@@ -52,7 +52,7 @@ namespace ZmsiProjOne
                     List<double> wyjsciowy = new List<double>();
                     foreach (var item in nowyKrok.ObliczonyPotencjalWejsciowy.ToArray())
                     {
-                        wyjsciowy.Add(FunkcjaAktywacjiBiPolarna(item));
+                        wyjsciowy.Add(FunkcjaAktywacjiPolarna(item));
                     }
                     nowyKrok.PotencjalWyjsciowy = new Matrix(wyjsciowy.ToArray());
                     Console.Write(String.Join(",", wyjsciowy));
@@ -76,12 +76,17 @@ namespace ZmsiProjOne
                         && nowyKrok.Energia == noweBadanie.ListaKrorkow[noweBadanie.ListaKrorkow.Count - 1].Energia
                         && macierzWag.IsSymetric())
                     {
-                        Console.WriteLine("Wyprodukowana przez sieć wartość energii jest równa w dwóch kolejnych krokach jej działania (warunek ten należy sprawdzać przy założeniu, że macierz wag jest symetryczna!).");
                         isExamining = false;
+                        Console.WriteLine("Wyprodukowana przez sieć wartość energii jest równa w dwóch kolejnych krokach jej działania (warunek ten należy sprawdzać przy założeniu, że macierz wag jest symetryczna!).");
                     }
                     else if (punktDoKtoregoZbiega != null)
                     { // Punkt zbiega do innego punktu
+                        isExamining = false;
                         noweBadanie.Wniosek = $"Punkt {String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray())} zbiega do punktu {String.Join(',', punktDoKtoregoZbiega.BadanyPunkt.ToArray())}.";
+                        //noweBadanie.PunktDoKtoregoZbiega = punktDoKtoregoZbiega;
+
+                        // Wykrywanie cyklu
+                        //if (punktDoKtoregoZbiega.PunktDoKtoregoZbiega != null && )
                     }
 
                     noweBadanie.ListaKrorkow.Add(nowyKrok);
