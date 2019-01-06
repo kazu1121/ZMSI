@@ -42,27 +42,22 @@ namespace ZmsiProjOne
                 Console.WriteLine($"\n\n--- Rozpoczęto badanie nr. {i + 1} ---");
                 while(isExamining)
                 {
-                    if (steps.Count > 1)
-                        newStep.PotencjalWejsciowy = steps[steps.Count - 2].PotencjalWyjsciowy;
-
                     newStep.Numer = steps.Count + 1;
+
+                    if (steps.Count > 0)
+                        newStep.PotencjalWejsciowy = steps[steps.Count - 1].PotencjalWyjsciowy;
+
                     Console.WriteLine($"Badany wektor:");
-                    foreach (var item in potencjalWejsciowy[i].Item1.ToArray())
-                    {
-                        Console.Write(item + ", ");
-                    }
+                    Console.Write(String.Join(',', potencjalWejsciowy[i].Item1.ToArray()));
 
                     Console.WriteLine($"\nKrok: {newStep.Numer}-------------------");
                     Console.WriteLine($"Potencjał wejściowy (U):");
 
-                    newStep.ObliczonyPotencjalWejsciowy = Matrix.Multiply(potencjalWejsciowy[i].Item1, macierzWag); 
-                    foreach (var item in newStep.ObliczonyPotencjalWejsciowy.ToArray())
-                    {
-                        Console.Write(item + ", ");
-                    }
+                    newStep.ObliczonyPotencjalWejsciowy = Matrix.Multiply(potencjalWejsciowy[i].Item1, macierzWag);
+                    Console.Write(String.Join(',', newStep.ObliczonyPotencjalWejsciowy.ToArray()));
 
-                    List<double> wyjsciowy = new List<double>();
                     Console.WriteLine($"\nPotencjał wyjściowy (V):");
+                    List<double> wyjsciowy = new List<double>();
                     foreach (var item in newStep.ObliczonyPotencjalWejsciowy.ToArray())
                     {
                         wyjsciowy.Add(FunkcjaAktywacjiBiPolarna(item));
@@ -74,10 +69,21 @@ namespace ZmsiProjOne
                     var obliczonaEnergia = 1d;// EnergiaSync(macierzWag, macierzI, new Matrix(new double[,] { potencjalWejsciowy[i].Item1.ToArray(), wyjsciowy.ToArray() }));
                     Console.WriteLine($"\nEnergia({newStep.Numer}) = {obliczonaEnergia}\n");
 
-                    steps.Add(newStep);
 
-                    // Sprawdzanie warunków
-                    isExamining = false;
+                    // Sprawdzanie warunków stopu kroku
+                    if (Matrix.Equals(newStep.PotencjalWejsciowy, newStep.PotencjalWyjsciowy))
+                    {
+                        Console.WriteLine("1) Sieć podczas działania wyprodukowała taki sam wektor jaki trafił na wejście w kroku T");
+                        isExamining = false;
+                    }
+                    //else if (steps.Count > 0 && newStep.PotencjalWejsciowy == newStep.PotencjalWyjsciowy && newStep.Energia == steps[steps.Count - 1].Energia && MacierzWagJestSymetryczna)
+                    //{
+                    //    Console.WriteLine("Wyprodukowana przez sieć wartość energii jest równa w dwóch kolejnych krokach jej działania (warunek ten należy sprawdzać przy założeniu, że macierz wag jest symetryczna!).");
+                    //    isExamining = false;
+                    //}
+
+                    steps.Add(newStep);
+                    //isExamining = false;
                 }
             }
         }
