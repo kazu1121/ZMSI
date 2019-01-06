@@ -1,6 +1,7 @@
 ﻿using DMU.Math;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ZmsiProjOne
 {
@@ -17,13 +18,12 @@ namespace ZmsiProjOne
         {
             Matrix macierzWag = new Matrix(new double[,] { { 0d, 4d }, { 4d, 0d } });
             Matrix macierzI = new Matrix(new double[] { 0.5d, 0.5d });
-            macierzWag.IsSymetric();
 
             var network = new Network(GenerujTablicePotencjalowWejsciowych(2, true));
 
             for (int i = 0; i < network.BadanePunkty.Count; i++)
             {
-                var noweBadanie = new Examination();
+                var noweBadanie = network.BadanePunkty[i];
                 var nowyKrok = new ExaminationStep();
 
                 // Jak skończy wszystkie kroki to ustawić na false
@@ -60,10 +60,11 @@ namespace ZmsiProjOne
                     var obliczonaEnergia = EnergiaSync(macierzWag, macierzI, nowyKrok);
                     Console.WriteLine($"\nEnergia({nowyKrok.Numer}) = {obliczonaEnergia}\n");
 
+                    // Sprawdzanie warunków stopu badania
+                    var punktDoKtoregoZbiega = network.BadanePunkty.FirstOrDefault(x => x.BadanyPunkt.AreMatrixesEquals(nowyKrok.PotencjalWyjsciowy));
 
-                    // Sprawdzanie warunków stopu kroku
                     if (nowyKrok.PotencjalWejsciowy.AreMatrixesEquals(nowyKrok.PotencjalWyjsciowy))
-                    {
+                    { // Punkt stały
                         Console.WriteLine("1) Sieć podczas działania wyprodukowała taki sam wektor jaki trafił na wejście w kroku T");
                         isExamining = false;
 
@@ -77,6 +78,10 @@ namespace ZmsiProjOne
                     {
                         Console.WriteLine("Wyprodukowana przez sieć wartość energii jest równa w dwóch kolejnych krokach jej działania (warunek ten należy sprawdzać przy założeniu, że macierz wag jest symetryczna!).");
                         isExamining = false;
+                    }
+                    else if (punktDoKtoregoZbiega != null)
+                    { // Punkt zbiega do innego punktu
+                        noweBadanie.Wniosek = $"Punkt {String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray())} zbiega do punktu {String.Join(',', punktDoKtoregoZbiega.BadanyPunkt.ToArray())}.";
                     }
 
                     noweBadanie.ListaKrorkow.Add(nowyKrok);
