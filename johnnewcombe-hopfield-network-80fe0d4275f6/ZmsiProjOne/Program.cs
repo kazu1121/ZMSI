@@ -92,7 +92,7 @@ namespace ZmsiProjOne
             }
         }
 
-        static List<Matrix> GenerujTablicePotencjalowWejsciowych(int n, bool isUnipolarna)
+        public static List<Matrix> GenerujTablicePotencjalowWejsciowych(int n, bool isUnipolarna)
         {
 
             List<Matrix> potencjalWejsciowy = new List<Matrix>();
