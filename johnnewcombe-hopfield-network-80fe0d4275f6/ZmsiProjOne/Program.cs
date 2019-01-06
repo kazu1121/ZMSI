@@ -28,7 +28,7 @@ namespace ZmsiProjOne
                 // Jak skończy wszystkie kroki to ustawić na false
                 bool isExamining = true;
 
-                Console.WriteLine($"\n\n--- Rozpoczęto badanie nr. {i + 1} ---");
+                Console.WriteLine($"\n----------------------------------------------------\n--- Rozpoczęto badanie nr. {i + 1} ---\n----------------------------------------------------");
                 while (isExamining)
                 {
                     nowyKrok.Numer = noweBadanie.ListaKrorkow.Count + 1;
@@ -38,15 +38,16 @@ namespace ZmsiProjOne
                     else
                         nowyKrok.PotencjalWejsciowy = network.TablicaPotencjalowWejsciowych[i];
 
-                    Console.WriteLine($"Badany wektor:");
+                    Console.WriteLine($"\nKrok: {nowyKrok.Numer}-------------------");
+
+                    Console.Write($"Badany wektor: ");
                     Console.Write(String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray()));
 
-                    Console.WriteLine($"\nKrok: {nowyKrok.Numer}-------------------");
-                    Console.WriteLine($"Potencjał wejściowy (U):");
+                    Console.Write($"\nPotencjał wejściowy (U): ");
                     nowyKrok.ObliczonyPotencjalWejsciowy = Matrix.Multiply(network.TablicaPotencjalowWejsciowych[i], macierzWag);
                     Console.Write(String.Join(',', nowyKrok.ObliczonyPotencjalWejsciowy.ToArray()));
 
-                    Console.WriteLine($"\nPotencjał wyjściowy (V):");
+                    Console.Write($"\nPotencjał wyjściowy (V): ");
                     List<double> wyjsciowy = new List<double>();
                     foreach (var item in nowyKrok.ObliczonyPotencjalWejsciowy.ToArray())
                     {
@@ -60,7 +61,6 @@ namespace ZmsiProjOne
 
 
                     // Sprawdzanie warunków stopu kroku
-                    //if (Matrix.Equals(nowyKrok.PotencjalWejsciowy, nowyKrok.PotencjalWyjsciowy))
                     if (nowyKrok.PotencjalWejsciowy.AreMatrixesEquals(nowyKrok.PotencjalWyjsciowy))
                     {
                         Console.WriteLine("1) Sieć podczas działania wyprodukowała taki sam wektor jaki trafił na wejście w kroku T");
