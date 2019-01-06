@@ -23,5 +23,24 @@ namespace ZmsiProjOne
 
             return true;
         }
+
+        public static bool IsSymetric(this Matrix matrix)
+        {
+            if (matrix.RowCount != matrix.ColumnCount)
+                return false;
+
+            var tempMatrix = new Matrix(matrix.RowCount, matrix.ColumnCount);
+
+            for (int i = 0; i < matrix.RowCount; i++)
+            {
+                for (int j = 0; j < matrix.ColumnCount; j++)
+                {
+                    //tempMatrix.SetElement(tempMatrix.RowCount - 1 - i, tempMatrix.ColumnCount - 1 - j, matrix.GetElement(i, j));
+                    tempMatrix.SetElement(j, i, matrix.GetElement(i, j));
+                }
+            }
+
+            return matrix.AreMatrixesEquals(tempMatrix);
+        }
     }
 }

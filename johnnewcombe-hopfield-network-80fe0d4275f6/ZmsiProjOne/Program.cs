@@ -15,10 +15,11 @@ namespace ZmsiProjOne
 
         static void SynchHopfield()
         {
-            Matrix macierzWag = new Matrix(new double[,] { { 0d, 1d }, { -0.5d, 0d } });
+            Matrix macierzWag = new Matrix(new double[,] { { 0d, 4d }, { 4d, 0d } });
             Matrix macierzI = new Matrix(new double[] { 0.5d, 0.5d });
+            macierzWag.IsSymetric();
 
-            var network = new Network(GenerujTablicePotencjalowWejsciowych(2, false));
+            var network = new Network(GenerujTablicePotencjalowWejsciowych(2, true));
 
             for (int i = 0; i < network.BadanePunkty.Count; i++)
             {
@@ -44,7 +45,7 @@ namespace ZmsiProjOne
                     Console.Write(String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray()));
 
                     Console.Write($"\nPotencjał wejściowy (U): ");
-                    nowyKrok.ObliczonyPotencjalWejsciowy = Matrix.Multiply(network.BadanePunkty[i].BadanyPunkt, macierzWag);
+                    nowyKrok.ObliczonyPotencjalWejsciowy = Matrix.Add(Matrix.Multiply(nowyKrok.PotencjalWejsciowy, macierzWag), macierzI);
                     Console.Write(String.Join(',', nowyKrok.ObliczonyPotencjalWejsciowy.ToArray()));
 
                     Console.Write($"\nPotencjał wyjściowy (V): ");
@@ -69,11 +70,14 @@ namespace ZmsiProjOne
                         if (noweBadanie.ListaKrorkow.Count == 0)
                             noweBadanie.Wniosek = $"Punkt {String.Join(',', nowyKrok.PotencjalWejsciowy.ToArray())} jest stały.";
                     }
-                    //else if (noweBadanie.ListaKrorkow.Count > 0 && nowyKrok.PotencjalWejsciowy == nowyKrok.PotencjalWyjsciowy && nowyKrok.Energia == noweBadanie.ListaKrorkow[noweBadanie.ListaKrorkow.Count - 1].Energia && MacierzWagJestSymetryczna)
-                    //{
-                    //    Console.WriteLine("Wyprodukowana przez sieć wartość energii jest równa w dwóch kolejnych krokach jej działania (warunek ten należy sprawdzać przy założeniu, że macierz wag jest symetryczna!).");
-                    //    isExamining = false;
-                    //}
+                    else if (noweBadanie.ListaKrorkow.Count > 0
+                        && nowyKrok.PotencjalWejsciowy == nowyKrok.PotencjalWyjsciowy
+                        && nowyKrok.Energia == noweBadanie.ListaKrorkow[noweBadanie.ListaKrorkow.Count - 1].Energia
+                        && macierzWag.IsSymetric())
+                    {
+                        Console.WriteLine("Wyprodukowana przez sieć wartość energii jest równa w dwóch kolejnych krokach jej działania (warunek ten należy sprawdzać przy założeniu, że macierz wag jest symetryczna!).");
+                        isExamining = false;
+                    }
 
                     noweBadanie.ListaKrorkow.Add(nowyKrok);
                 }
