@@ -21,5 +21,20 @@ namespace ZmsiProjOne
                 });
             }
         }
+
+
+        public override string ToString()
+        {
+            string wyjscie = "";
+
+            foreach (var item in BadanePunkty)
+            {
+                wyjscie += item.ToString();
+
+            }
+
+            return wyjscie;
+
+        }
     }
 }
