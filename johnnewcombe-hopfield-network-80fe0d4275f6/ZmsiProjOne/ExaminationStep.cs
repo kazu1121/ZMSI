@@ -25,14 +25,14 @@ namespace ZmsiProjOne
         public override string ToString()
         {
             string wyjscie = "";
-            wyjscie += "-----------------------------------------------------------------------------------\n";
-            wyjscie += $"\t numer kroku { Numer }\n";
-            wyjscie += $"V({Numer - 1}):\t" + PotencjalWejsciowy.ToString();
-            wyjscie += $"U({Numer }):\t" + ObliczonyPotencjalWejsciowy.ToString();
-            wyjscie += $"V({Numer }):\t" + PotencjalWyjsciowy.ToString();
-            wyjscie += $"E({Numer }):\t{Energia}";
+            wyjscie += "\n-----------------------------------------------------------------------------------\n";
+            wyjscie += $"\n\t numer kroku { Numer }";
+            wyjscie += $"\nV({Numer - 1}):\t" + PotencjalWejsciowy.ToString();
+            wyjscie += $"\nU({Numer }):\t" + ObliczonyPotencjalWejsciowy.ToString();
+            wyjscie += $"\nV({Numer }):\t" + PotencjalWyjsciowy.ToString();
+            wyjscie += $"\nE({Numer }):\t{Energia}";
      
-            wyjscie += "-----------------------------------------------------------------------------------\n";
+            wyjscie += "\n-----------------------------------------------------------------------------------\n";
 
 
             return wyjscie;

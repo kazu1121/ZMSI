@@ -29,7 +29,7 @@ namespace ZmsiProjOne
 
             foreach (var item in BadanePunkty)
             {
-                wyjscie += item.ToString();
+                wyjscie += item.ToString()+"\n";
 
             }
 
