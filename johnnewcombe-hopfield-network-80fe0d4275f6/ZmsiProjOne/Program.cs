@@ -9,6 +9,13 @@ namespace ZmsiProjOne
     {
         static void Main(string[] args)
         {
+            //SynchHopfield();
+            HopfieldAsync ha = new HopfieldAsync();
+            Matrix w = new Matrix(new double[,] { { 0d, 1d,2d }, { 1d, 0d,-1d }, { 2d, -1d, 0d } });
+            Matrix I = new Matrix(new double[] { 0, 0, 0 });
+            int[] sekwencja = new int[] { 0, 1,2 };
+            ha.runHopfield(w,I,sekwencja, false);
+
             var network = new Network(GenerujTablicePotencjalowWejsciowych(2, true));
 
             SynchHopfield(network);
@@ -222,7 +229,7 @@ namespace ZmsiProjOne
         }
 
 
-        static double EnergiaSync(Matrix w, Matrix I, ExaminationStep x)
+        public static double EnergiaSync(Matrix w, Matrix I, ExaminationStep x)
         {
             double suma = 0;
             int n = w.RowCount;
@@ -247,7 +254,7 @@ namespace ZmsiProjOne
         }
 
 
-        public double EnergiaAsync(Matrix w, ExaminationStep e)
+        public static double EnergiaAsync(Matrix w, ExaminationStep e)
         {
             double suma = 0;
             int n = w.RowCount;

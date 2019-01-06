@@ -14,7 +14,7 @@ namespace ZmsiProjOne
 
 
 
-        public void runHopfield(Matrix w, int[] Sekwencja,bool isFunkcjaAktywacjiUnipolarna = true)
+        public void runHopfield(Matrix w,Matrix i, int[] Sekwencja,bool isFunkcjaAktywacjiUnipolarna = true)
         {
             sekwencja = Sekwencja;
 
@@ -22,9 +22,10 @@ namespace ZmsiProjOne
 
             foreach (var item in network.BadanePunkty)
             {
-                if (item.Wniosek == "")
+                //Console.Write("KUPA!!");
+                if(String.IsNullOrEmpty(item.Wniosek))
                 {
-                    oblicz(w, item, isFunkcjaAktywacjiUnipolarna);
+                    oblicz(w,i, item, isFunkcjaAktywacjiUnipolarna);
                 }
             }
         }
@@ -101,6 +102,7 @@ namespace ZmsiProjOne
                     {
                         listaWystapionychWektorow.Add(examination.ListaKrorkow[i].PotencjalWyjsciowy);
                     }
+                    licznikCykluTegoSamegoVektora = 0;
 
                 }
 
@@ -113,7 +115,7 @@ namespace ZmsiProjOne
 
 
 
-        public void oblicz(Matrix w, Examination examination, bool isFunkcjaAktywackiUnipolarna)
+        public void oblicz(Matrix w,Matrix I, Examination examination, bool isFunkcjaAktywackiUnipolarna)
         {
             int n = w.ColumnCount;
             int iteratorSekwencji = 0;
@@ -129,13 +131,12 @@ namespace ZmsiProjOne
                 tempExaminationStep.Numer = ineratorStep;
                 ineratorStep++;
 
-                tempExaminationStep.ObliczonyPotencjalWejsciowy = Matrix.Multiply(tempExaminationStep.PotencjalWejsciowy, w);
-
+               tempExaminationStep.ObliczonyPotencjalWejsciowy = Matrix.Add(Matrix.Multiply(tempExaminationStep.PotencjalWejsciowy, w), I);
 
                 double[] tempPotencjalWyjsciowy = new double[n];
                 for (int i = 0; i < n; i++)
                 {
-                    if (i != iteratorSekwencji)
+                    if (i != sekwencja[iteratorSekwencji])
                     {
                         tempPotencjalWyjsciowy[i] = tempExaminationStep.PotencjalWejsciowy.GetElement(0, i);
                     }
@@ -157,17 +158,20 @@ namespace ZmsiProjOne
                 var tempPoteWyjMatrix = new Matrix(tempPotencjalWyjsciowy);
 
                 tempExaminationStep.PotencjalWyjsciowy = tempPoteWyjMatrix;
+                tempExaminationStep.Energia = Program.EnergiaAsync(w, tempExaminationStep);
                 examination.ListaKrorkow.Add(tempExaminationStep);
 
-                tempExaminationStep = new ExaminationStep();
-                //ustawianie V(t) do koljenego kroku jako V(t-1) 
-                tempExaminationStep.PotencjalWejsciowy = tempPoteWyjMatrix;
 
                 iteratorSekwencji++;
                 if (iteratorSekwencji == n)
                 {
                     iteratorSekwencji = 0;
                 }
+                //Console.WriteLine(iteratorSekwencji+":\t"+tempExaminationStep.PotencjalWyjsciowy.ToString());
+
+                tempExaminationStep = new ExaminationStep();
+                //ustawianie V(t) do koljenego kroku jako V(t-1) 
+                tempExaminationStep.PotencjalWejsciowy = tempPoteWyjMatrix;
 
 
             } while (!checkExaminationAsync(n,examination));
