@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ZmsiProjOne.ViewModels;
 
 namespace ZmsiProjOne
 {
@@ -14,18 +15,18 @@ namespace ZmsiProjOne
 
 
 
-        public void runHopfield(Matrix w,Matrix i, int[] Sekwencja,bool isFunkcjaAktywacjiUnipolarna = true)
+        public void runHopfield(Matrix w,Matrix i, int[] Sekwencja, ActivationFunction activationFunction = ActivationFunction.Unipolar)
         {
             sekwencja = Sekwencja;
 
-            network = new Network(Program.GenerujTablicePotencjalowWejsciowych(w.ColumnCount,isFunkcjaAktywacjiUnipolarna));
+            network = new Network(Program.GenerujTablicePotencjalowWejsciowych(w.ColumnCount, activationFunction));
 
             foreach (var item in network.BadanePunkty)
             {
                 //Console.Write("KUPA!!");
                 if(String.IsNullOrEmpty(item.Wniosek))
                 {
-                    oblicz(w,i, item, isFunkcjaAktywacjiUnipolarna);
+                    oblicz(w,i, item, activationFunction == ActivationFunction.Unipolar);
                 }
             }
         }

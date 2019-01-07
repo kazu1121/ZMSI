@@ -1,0 +1,75 @@
+﻿@model ZmsiProjOne.ViewModels.HopfieldViewModel
+
+@{
+    ViewData["Title"] = "Hopfield form p 2";
+}
+
+<h2>Pobieranie danych macierzy</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="HopfieldDetailedData">
+            @Html.HiddenFor(x => x.HopfieldBaseData.WeightMatrixSize)
+            @Html.HiddenFor(x => x.HopfieldBaseData.ActivationFunction)
+            @Html.HiddenFor(x => x.HopfieldBaseData.ExaminationMode)
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="WeightMatrix" class="control-label"></label>
+
+                <table>
+                    @for (int column = 0; column < Model.WeightMatrix.Length; column++)
+                    {
+                        <tr>
+                            @for (int row = 0; row < Model.WeightMatrix.Length; row++)
+                            {
+                                <td>@Html.EditorFor(x => Model.WeightMatrix[column][row])</td>
+
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IMatrix" class="control-label"></label>
+
+                <table>
+                    @for (int i = 0; i < Model.IMatrix.Length; i++)
+                    {
+                        <tr>
+                            <td>@Html.EditorFor(x => Model.IMatrix[i])</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+            @if (Model.HopfieldBaseData.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Async)
+            {
+                <div class="form-group">
+                    <label asp-for="AsyncExaminingOrder" class="control-label"></label>
+
+                    <table>
+                        <tr>
+                            @for (int i = 0; i < Model.AsyncExaminingOrder.Length; i++)
+                            {
+                                <td>@Html.EditorFor(x => Model.AsyncExaminingOrder[i])</td>
+
+                            }
+                        </tr>
+                    </table>
+                </div>
+            }
+
+            <div class="form-group">
+                <input type="submit" value="Oblicz" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

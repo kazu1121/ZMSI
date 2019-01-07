@@ -2,33 +2,35 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ZmsiProjOne.ViewModels;
 
 namespace ZmsiProjOne
 {
-    public class Program
+    class Program
     {
         static void Main(string[] args)
         {
+<<<<<<< HEAD
+            var network = new Network(GenerujTablicePotencjalowWejsciowych(2, true));
+=======
             //SynchHopfield();
             HopfieldAsync ha = new HopfieldAsync();
             Matrix w = new Matrix(new double[,] { { 0d, 1d,2d }, { 1d, 0d,-1d }, { 2d, -1d, 0d } });
             Matrix I = new Matrix(new double[] { 0, 0, 0 });
             int[] sekwencja = new int[] { 0, 1,2 };
-            ha.runHopfield(w,I,sekwencja, ActivationFunction.Bipolar);
+            ha.runHopfield(w,I,sekwencja, false);
+>>>>>>> 0b5041d79ee8c527f6867b25906724457ddcc4bb
 
-            Matrix macierzWag = new Matrix(new double[,] { { 0d, 4d }, { 4d, 0d } });
-            Matrix macierzI = new Matrix(new double[] { 0d, 0d });
-
-            var network = SynchHopfield(macierzWag, macierzI, ActivationFunction.Unipolar);
+            SynchHopfield(network);
             network.WyswietlPrzebiegNaKonsoli();
 
             Console.ReadKey();
         }
 
-        public static Network SynchHopfield(Matrix macierzWag, Matrix macierzI, ActivationFunction activationFunction)
+        static void SynchHopfield(Network network)
         {
-            var network = new Network(GenerujTablicePotencjalowWejsciowych(macierzWag.ColumnCount, activationFunction));
+            Matrix macierzWag = new Matrix(new double[,] { { 0d, 4d }, { 4d, 0d } });
+            Matrix macierzI = new Matrix(new double[] { 0d, 0d });
+
 
             for (int i = 0; i < network.BadanePunkty.Count; i++)
             {
@@ -55,13 +57,12 @@ namespace ZmsiProjOne
 
                     // Obliczenie potencjału wejściowego dla funkcji aktywacji
                     nowyKrok.ObliczonyPotencjalWejsciowy = Matrix.Add(Matrix.Multiply(nowyKrok.PotencjalWejsciowy, macierzWag), macierzI);
-                    //nowyKrok.ObliczonyPotencjalWejsciowy = Matrix.Add(Matrix.Multiply(macierzWag, nowyKrok.PotencjalWejsciowy), macierzI);
 
                     // Obliczenie potencjału wyjściowego
                     List<double> wyjsciowy = new List<double>();
                     foreach (var item in nowyKrok.ObliczonyPotencjalWejsciowy.ToArray())
                     {
-                        wyjsciowy.Add(activationFunction == ActivationFunction.Unipolar ? FunkcjaAktywacjiPolarna(item) : FunkcjaAktywacjiBiPolarna(item));
+                        wyjsciowy.Add(FunkcjaAktywacjiPolarna(item));
                     }
                     nowyKrok.PotencjalWyjsciowy = new Matrix(wyjsciowy.ToArray());
 
@@ -101,7 +102,6 @@ namespace ZmsiProjOne
             }
 
             UstawWyniki(network);
-            return network;
         }
 
         public static void UstawWyniki(Network network)
@@ -195,7 +195,7 @@ namespace ZmsiProjOne
             }
         }
 
-        public static List<Matrix> GenerujTablicePotencjalowWejsciowych(int n, ActivationFunction activationFunction)
+        public static List<Matrix> GenerujTablicePotencjalowWejsciowych(int n, bool isUnipolarna)
         {
 
             List<Matrix> potencjalWejsciowy = new List<Matrix>();
@@ -215,7 +215,7 @@ namespace ZmsiProjOne
                     tempWartosc = reprezentacjaBianarna[j];
 
                     if (tempWartosc == '0')
-                        if (activationFunction == ActivationFunction.Unipolar)
+                        if (isUnipolarna == true)
                             temp[j] = 0d;
                         else
                             temp[j] = -1d;
