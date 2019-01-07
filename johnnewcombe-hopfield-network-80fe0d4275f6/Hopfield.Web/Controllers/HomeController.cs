@@ -88,16 +88,12 @@ namespace Hopfield.Web.Controllers
 
             var result = new HopfieldResultViewModel()
             {
-                HopfieldViewModel = viewModel
+                HopfieldViewModel = viewModel,
+                ResultNetwork = computedNetwork
             };
 
 
-            return RedirectToAction("HopfieldResultOne", result);
-        }
-
-        public IActionResult HopfieldResultOne(HopfieldResultViewModel viewModel)
-        {
-            return View(viewModel);
+            return View("HopfieldResultOne", result);
         }
     }
 }

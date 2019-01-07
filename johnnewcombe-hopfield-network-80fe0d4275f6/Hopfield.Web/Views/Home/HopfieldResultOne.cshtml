@@ -1,0 +1,93 @@
+﻿@model ZmsiProjOne.ViewModels.HopfieldResultViewModel
+
+@{
+    ViewData["Title"] = "Rezultat";
+    string trybBadania = Model.HopfieldViewModel.HopfieldBaseData.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Sync ? "synchroniczny" : "asynchroniczny";
+}
+<div class="row">
+    <div class="col-md-12">
+        <h3>Dane Wejściowe:</h3>
+
+        <div class="form-group">
+            <label class="control-label">Tryb @trybBadania</label>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="HopfieldViewModel.WeightMatrix" class="control-label"></label>
+
+            <table>
+                @for (int column = 0; column < Model.HopfieldViewModel.WeightMatrix.Length; column++)
+                {
+                    <tr>
+                        @for (int row = 0; row < Model.HopfieldViewModel.WeightMatrix.Length; row++)
+                        {
+                            <td>@Html.EditorFor(x => Model.HopfieldViewModel.WeightMatrix[column][row], new { htmlAttributes = new { @disabled = "disabled" } })</td>
+
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="HopfieldViewModel.IMatrix" class="control-label"></label>
+
+            <table>
+                @for (int i = 0; i < Model.HopfieldViewModel.IMatrix.Length; i++)
+                {
+                    <tr>
+                        <td>@Html.EditorFor(x => Model.HopfieldViewModel.IMatrix[i], new { htmlAttributes = new { @disabled = "disabled" } })</td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+        @if (Model.HopfieldViewModel.HopfieldBaseData.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Async)
+        {
+            <div class="form-group">
+                <label asp-for="HopfieldViewModel.AsyncExaminingOrder" class="control-label"></label>
+
+                <table>
+                    <tr>
+                        @for (int i = 0; i < Model.HopfieldViewModel.AsyncExaminingOrder.Length; i++)
+                        {
+                            <td>@Html.EditorFor(x => Model.HopfieldViewModel.AsyncExaminingOrder[i], new { htmlAttributes = new { @disabled = "disabled" } })</td>
+                        }
+                    </tr>
+                </table>
+            </div>
+        }
+
+        <h3>Wyniki:</h3>
+        @for (int i = 0; i < Model.ResultNetwork.BadanePunkty.Count; i++)
+        {
+            <div class="form-group">
+                <label class="control-label">Rozpoczęto badanie nr @i</label>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Badany wektor: @{String.Join(" ", Model.ResultNetwork.BadanePunkty[i].BadanyPunkt.ToArray());}</label>
+            </div>
+
+            for (int j = 0; j < Model.ResultNetwork.BadanePunkty[i].ListaKrorkow.Count; j++)
+            {
+                <div class="form-group">
+                    <label class="control-label">Krok: @Model.ResultNetwork.BadanePunkty[i].ListaKrorkow[j].Numer</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Potencjał wejściowy (U): @{String.Join(" ", Model.ResultNetwork.BadanePunkty[i].ListaKrorkow[j].ObliczonyPotencjalWejsciowy.ToArray());}</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Potencjał wyjściowy (V): @{String.Join(" ", Model.ResultNetwork.BadanePunkty[i].ListaKrorkow[j].PotencjalWyjsciowy.ToArray());}</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Energia: @Model.ResultNetwork.BadanePunkty[i].ListaKrorkow[j].Energia</label>
+                </div>
+            }
+
+            <div class="form-group" style="background-color: lawngreen">
+                <label class="control-label">Wniosek: @Model.ResultNetwork.BadanePunkty[i].Wniosek</label>
+            </div>
+        }
+    </div>
+</div>
