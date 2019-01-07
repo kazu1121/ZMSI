@@ -8,6 +8,7 @@ namespace ZmsiProjOne
     public class Examination
     {
         public Matrix BadanyPunkt { get; set; }
+        public string BadanyPunktString { get; set; }
         public bool? CzyPunktStaly { get; set; }
         public Examination PunktDoKtoregoZbiega { get; set; }
         public List<Examination> Cykl { get; set; }
@@ -41,12 +42,10 @@ namespace ZmsiProjOne
             return wyjscie;
         }
 
-
-
-
-
-
+        public void BadanyPunktToString()
+        {
+            BadanyPunktString = String.Join(" ", BadanyPunkt.ToArray());
+        }
     }
-
 }
 

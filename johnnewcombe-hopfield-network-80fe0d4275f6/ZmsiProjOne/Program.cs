@@ -114,7 +114,10 @@ namespace ZmsiProjOne
         {
             foreach (var badanyPunkt in network.BadanePunkty)
             {
-                if(badanyPunkt.CzyPunktStaly.HasValue && badanyPunkt.CzyPunktStaly.Value == true)
+                badanyPunkt.BadanyPunktToString();
+                badanyPunkt.ListaKrorkow.ForEach(x => x.UstawMacierzeToString());
+
+                if (badanyPunkt.CzyPunktStaly.HasValue && badanyPunkt.CzyPunktStaly.Value == true)
                 {// Punkt stały
                     badanyPunkt.Wniosek = $"Punkt [{String.Join(" ", badanyPunkt.BadanyPunkt.ToArray())}] jest stały!";
                 }

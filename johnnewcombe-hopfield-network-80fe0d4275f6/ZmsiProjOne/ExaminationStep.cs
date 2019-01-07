@@ -12,12 +12,16 @@ namespace ZmsiProjOne
 
         // V(t-1)
         public Matrix PotencjalWejsciowy { get; set; }
+        public string PotencjalWejsciowyString { get; set; }
 
         // U(t)
         public Matrix ObliczonyPotencjalWejsciowy { get; set; }
+        public string ObliczonyPotencjalWejsciowyString { get; set; }
 
         // V(t)
         public Matrix PotencjalWyjsciowy { get; set; }
+        public string PotencjalWyjsciowyString { get; set; }
+
         public double Energia { get; set; }
 
 
@@ -36,6 +40,13 @@ namespace ZmsiProjOne
 
 
             return wyjscie;
+        }
+
+        public void UstawMacierzeToString()
+        {
+            PotencjalWejsciowyString = String.Join(" ", PotencjalWejsciowy.ToArray());
+            ObliczonyPotencjalWejsciowyString = String.Join(" ", ObliczonyPotencjalWejsciowy.ToArray());
+            PotencjalWyjsciowyString = String.Join(" ", PotencjalWyjsciowy.ToArray());
         }
     }
 }
