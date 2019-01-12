@@ -10,6 +10,8 @@ namespace ZmsiProjOne
     {
         static void Main(string[] args)
         {
+            var qwe = GenerateRandomMatrixes(10, 3, 3);
+
             //SynchHopfield();
             HopfieldAsync ha = new HopfieldAsync();
             Matrix w = new Matrix(new double[,] { { 0d, 1d,2d }, { 1d, 0d,-1d }, { 2d, -1d, 0d } });
@@ -24,6 +26,29 @@ namespace ZmsiProjOne
             network.WyswietlPrzebiegNaKonsoli();
 
             Console.ReadKey();
+        }
+
+        public static List<Matrix> GenerateRandomMatrixes(int quantity, int rows, int columns, bool isSymetric = true)
+        {
+            var result = new List<Matrix>();
+            Random random = new Random();
+
+            for (int i = 0; i < quantity; i++)
+            {
+                Matrix tempMatrix = new Matrix(rows, columns);
+
+                for (int j = 0; j < rows; j++)
+                {
+                    for (int k = 0; k < columns; k++)
+                    {
+                        tempMatrix.SetElement(j, k, random.NextDouble() >= 0.5 ? random.NextDouble() : (random.NextDouble() * -1));
+                    }
+                }
+
+                result.Add(tempMatrix);
+            }
+
+            return result;
         }
 
         public static Network SynchHopfield(Matrix macierzWag, Matrix macierzI, ActivationFunction activationFunction)

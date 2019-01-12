@@ -95,5 +95,34 @@ namespace Hopfield.Web.Controllers
 
             return View("HopfieldResultOne", result);
         }
+
+        public IActionResult HopfieldBaseDataPartTwo()
+        {
+            return View(new HopfieldBaseDataPartTwoViewModel());
+        }
+
+        [HttpPost]
+        public IActionResult HopfieldBaseDataPartTwo(HopfieldBaseDataPartTwoViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+                return View(viewModel);
+                                   
+            var generatedMatrixes = ZmsiProjOne.Program.GenerateRandomMatrixes(viewModel.MatrixQuantity, viewModel.WeightMatrixSize, viewModel.WeightMatrixSize);
+
+            HopfieldResultTwoViewModel result = new HopfieldResultTwoViewModel()
+            {
+                //HopfieldViewModel = new HopfieldViewModel(viewModel)
+            };
+
+            foreach (var generatedMatrix in generatedMatrixes)
+            {
+                result.ResultNetworks.Add(ZmsiProjOne.Program.SynchHopfield(
+                                                                generatedMatrix,
+                                                            new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, 0.5),
+                                                            viewModel.ActivationFunction));
+            }
+
+            return View("HopfieldResultTwo", result);
+        }
     }
 }
