@@ -2,96 +2,102 @@
 
 @{
     ViewData["Title"] = "Rezultat";
-    string trybBadania = "qwe";//Model.HopfieldViewModel.HopfieldBaseData.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Sync ? "synchroniczny" : "asynchroniczny";
+    string trybBadania = Model.HopfieldResultViewModel[0].HopfieldViewModel.HopfieldBaseData.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Sync ? "synchroniczny" : "asynchroniczny";
 }
 <div class="row">
     <div class="col-md-12">
-        <h3>Dane Wejściowe:</h3>
 
-        <div class="form-group">
-            <label class="control-label">Tryb @trybBadania</label>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="HopfieldViewModel.WeightMatrix" class="control-label"></label>
-
-            <table>
-                @for (int column = 0; column < Model.HopfieldViewModel.WeightMatrix.Length; column++)
-                {
-                    <tr>
-                        @for (int row = 0; row < Model.HopfieldViewModel.WeightMatrix.Length; row++)
-                        {
-                            <td>@Html.EditorFor(x => Model.HopfieldViewModel.WeightMatrix[column][row], new { htmlAttributes = new { @disabled = "disabled" } })</td>
-
-                        }
-                    </tr>
-                }
-            </table>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="HopfieldViewModel.IMatrix" class="control-label"></label>
-
-            <table>
-                @for (int i = 0; i < Model.HopfieldViewModel.IMatrix.Length; i++)
-                {
-                    <tr>
-                        <td>@Html.EditorFor(x => Model.HopfieldViewModel.IMatrix[i], new { htmlAttributes = new { @disabled = "disabled" } })</td>
-                    </tr>
-                }
-            </table>
-        </div>
-
-        @if (Model.HopfieldViewModel.HopfieldBaseData.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Async)
+        @for (int i = 0; i < Model.HopfieldResultViewModel.Count; i++)
         {
+            var matrixCounter = i + 1;
+
+            <h2 style="text-align: center;">Macierz nr @matrixCounter</h2>
+            <h3>Dane Wejściowe:</h3>
+
             <div class="form-group">
-                <label asp-for="HopfieldViewModel.AsyncExaminingOrder" class="control-label"></label>
+                <label class="control-label">Tryb @trybBadania</label>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="HopfieldResultViewModel[i].HopfieldViewModel.WeightMatrix" class="control-label"></label>
 
                 <table>
-                    <tr>
-                        @for (int i = 0; i < Model.HopfieldViewModel.AsyncExaminingOrder.Length; i++)
-                        {
-                            <td>@Html.EditorFor(x => Model.HopfieldViewModel.AsyncExaminingOrder[i], new { htmlAttributes = new { @disabled = "disabled" } })</td>
-                        }
-                    </tr>
+                    @for (int column = 0; column < Model.HopfieldResultViewModel[i].HopfieldViewModel.WeightMatrix.Length; column++)
+                    {
+                        <tr>
+                            @for (int row = 0; row < Model.HopfieldResultViewModel[i].HopfieldViewModel.WeightMatrix.Length; row++)
+                            {
+                                <td>@Html.EditorFor(x => Model.HopfieldResultViewModel[i].HopfieldViewModel.WeightMatrix[column][row], new { htmlAttributes = new { @disabled = "disabled" } })</td>
+
+                            }
+                        </tr>
+                    }
                 </table>
             </div>
-        }
 
-        <h3>Wyniki:</h3>
-        @foreach (var resultNetwork in Model.ResultNetworks)
-        {
+            <div class="form-group">
+                <label asp-for="HopfieldResultViewModel[i].HopfieldViewModel.IMatrix" class="control-label"></label>
 
-            @for (int i = 0; i < resultNetwork.BadanePunkty.Count; i++)
+                <table>
+                    @for (int j = 0; j < Model.HopfieldResultViewModel[i].HopfieldViewModel.IMatrix.Length; j++)
+                    {
+                        <tr>
+                            <td>@Html.EditorFor(x => Model.HopfieldResultViewModel[i].HopfieldViewModel.IMatrix[j], new { htmlAttributes = new { @disabled = "disabled" } })</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+
+            @if (Model.HopfieldResultViewModel[i].HopfieldViewModel.HopfieldBaseData.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Async)
             {
                 <div class="form-group">
-                    <label class="control-label">Rozpoczęto badanie nr @i</label>
+                    <label asp-for="HopfieldResultViewModel[i].HopfieldViewModel.AsyncExaminingOrder" class="control-label"></label>
+
+                    <table>
+                        <tr>
+                            @for (int j = 0; j < Model.HopfieldResultViewModel[j].HopfieldViewModel.AsyncExaminingOrder.Length; i++)
+                            {
+                                <td>@Html.EditorFor(x => Model.HopfieldResultViewModel[j].HopfieldViewModel.AsyncExaminingOrder[j], new { htmlAttributes = new { @disabled = "disabled" } })</td>
+                            }
+                        </tr>
+                    </table>
+                </div>
+            }
+
+            <h3>Wyniki:</h3>
+            @for (int j = 0; j < Model.HopfieldResultViewModel[i].ResultNetwork.BadanePunkty.Count; j++)
+            {
+                var examinationCounter = j + 1;
+                <div class="form-group">
+                    <label class="control-label">Rozpoczęto badanie nr @examinationCounter</label>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label">Badany wektor: @{String.Join(" ", resultNetwork.BadanePunkty[i].BadanyPunkt.ToArray());}</label>
+                    <label class="control-label">Badany wektor: @Model.HopfieldResultViewModel[i].ResultNetwork.BadanePunkty[j].BadanyPunktString</label>
                 </div>
 
-                for (int j = 0; j < resultNetwork.BadanePunkty[i].ListaKrorkow.Count; j++)
+                for (int k = 0; k < Model.HopfieldResultViewModel[i].ResultNetwork.BadanePunkty[j].ListaKrorkow.Count; k++)
                 {
                     <div class="form-group">
-                        <label class="control-label">Krok: @resultNetwork.BadanePunkty[i].ListaKrorkow[j].Numer</label>
+                        <label class="control-label">Krok: @Model.HopfieldResultViewModel[i].ResultNetwork.BadanePunkty[j].ListaKrorkow[k].Numer</label>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Potencjał wejściowy (U): @{String.Join(" ", resultNetwork.BadanePunkty[i].ListaKrorkow[j].ObliczonyPotencjalWejsciowy.ToArray());}</label>
+                        <label class="control-label">Potencjał wejściowy (U): @Model.HopfieldResultViewModel[i].ResultNetwork.BadanePunkty[j].ListaKrorkow[k].ObliczonyPotencjalWejsciowyString</label>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Potencjał wyjściowy (V): @{String.Join(" ", resultNetwork.BadanePunkty[i].ListaKrorkow[j].PotencjalWyjsciowy.ToArray());}</label>
+                        <label class="control-label">Potencjał wyjściowy (V): @Model.HopfieldResultViewModel[i].ResultNetwork.BadanePunkty[j].ListaKrorkow[k].PotencjalWyjsciowyString</label>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Energia: @resultNetwork.BadanePunkty[i].ListaKrorkow[j].Energia</label>
+                        <label class="control-label">Energia: @Model.HopfieldResultViewModel[i].ResultNetwork.BadanePunkty[j].ListaKrorkow[k].Energia</label>
                     </div>
                 }
 
                 <div class="form-group" style="background-color: lawngreen">
-                    <label class="control-label">Wniosek: @resultNetwork.BadanePunkty[i].Wniosek</label>
+                    <label class="control-label">Wniosek: @Model.HopfieldResultViewModel[i].ResultNetwork.BadanePunkty[j].Wniosek</label>
                 </div>
             }
         }
+
+        <h2 style="text-align: center;">Podsumowanie</h2>
     </div>
 </div>

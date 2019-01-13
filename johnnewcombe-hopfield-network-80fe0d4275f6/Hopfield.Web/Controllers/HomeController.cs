@@ -109,17 +109,56 @@ namespace Hopfield.Web.Controllers
                                    
             var generatedMatrixes = ZmsiProjOne.Program.GenerateRandomMatrixes(viewModel.MatrixQuantity, viewModel.WeightMatrixSize, viewModel.WeightMatrixSize);
 
-            HopfieldResultTwoViewModel result = new HopfieldResultTwoViewModel()
-            {
-                //HopfieldViewModel = new HopfieldViewModel(viewModel)
-            };
+            HopfieldResultTwoViewModel result = new HopfieldResultTwoViewModel();
 
             foreach (var generatedMatrix in generatedMatrixes)
             {
-                result.ResultNetworks.Add(ZmsiProjOne.Program.SynchHopfield(
+                //result.HopfieldResultViewModel.Add(new HopfieldResultViewModel()
+                //{
+                //    ResultNetwork = ZmsiProjOne.Program.SynchHopfield(
+                //                                                generatedMatrix,
+                //                                            new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, 0.5),
+                //                                            viewModel.ActivationFunction),
+                //    HopfieldViewModel = new HopfieldViewModel()
+                //    {
+                //        WeightMatrix = new double[viewModel.WeightMatrixSize][],
+                //        IMatrix = new double[viewModel.WeightMatrixSize],
+                //        AsyncExaminingOrder = new int[viewModel.WeightMatrixSize],
+                //        HopfieldBaseData = new HopfieldBaseViewModel()
+                //        {
+                //            ActivationFunction = viewModel.ActivationFunction,
+                //            ExaminationMode = viewModel.ExaminationMode
+                //        }
+                //    }
+                //});
+
+                var hvm = new HopfieldViewModel()
+                {
+                    WeightMatrix = new double[viewModel.WeightMatrixSize][],
+                    IMatrix = new double[viewModel.WeightMatrixSize],
+                    AsyncExaminingOrder = new int[viewModel.WeightMatrixSize],
+                    HopfieldBaseData = new HopfieldBaseViewModel()
+                    {
+                        ActivationFunction = viewModel.ActivationFunction,
+                        ExaminationMode = viewModel.ExaminationMode
+                    }
+                };
+                for (int i = 0; i < viewModel.WeightMatrixSize; i++)
+                {
+                    hvm.WeightMatrix[i] = generatedMatrix.GetRow(i).ToArray();
+                    hvm.IMatrix[i] = 0.5;
+                }
+
+                var hrvm = new HopfieldResultViewModel()
+                {
+                    ResultNetwork = ZmsiProjOne.Program.SynchHopfield(
                                                                 generatedMatrix,
                                                             new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, 0.5),
-                                                            viewModel.ActivationFunction));
+                                                            viewModel.ActivationFunction),
+                    HopfieldViewModel = hvm
+                };
+
+                result.HopfieldResultViewModel.Add(hrvm);
             }
 
             return View("HopfieldResultTwo", result);

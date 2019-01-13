@@ -8,10 +8,13 @@ namespace ZmsiProjOne.ViewModels
     {
         public HopfieldResultTwoViewModel()
         {
-            ResultNetworks = new List<Network>();
+            //ResultNetworks = new List<Network>();
+            HopfieldResultViewModel = new List<HopfieldResultViewModel>();
         }
 
-        public HopfieldViewModel HopfieldViewModel { get; set; }
-        public List<Network> ResultNetworks { get; set; }
+        //public HopfieldViewModel HopfieldViewModel { get; set; }
+        //public List<Network> ResultNetworks { get; set; }
+
+        public List<HopfieldResultViewModel> HopfieldResultViewModel { get; set; }
     }
 }
