@@ -15,6 +15,7 @@ namespace ZmsiProjOne
         public bool? CzyPunktWpadaWCykl { get; set; }
 
         public Examination PunktDoKtoregoZbiega { get; set; }
+        public Examination PunktDoKtoregoZbiegaFinalnie { get; set; }
         public List<Examination> Cykl { get; set; }
         public List<ExaminationStep> ListaKrorkow { get; set; }
 

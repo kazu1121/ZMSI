@@ -103,7 +103,9 @@ namespace ZmsiProjOne
                     if (nowyKrok.PotencjalWejsciowy.AreMatrixesEquals(nowyKrok.PotencjalWyjsciowy))
                     { // Punkt stały
                         isExamining = false;
-                        noweBadanie.CzyPunktStaly = true;
+
+                        if (noweBadanie.ListaKrorkow.Count == 0)
+                            noweBadanie.CzyPunktStaly = true;
                     }
                     else if (noweBadanie.ListaKrorkow.Count > 0
                         && nowyKrok.PotencjalWejsciowy == nowyKrok.PotencjalWyjsciowy
@@ -131,6 +133,7 @@ namespace ZmsiProjOne
 
         public static void UstawWyniki(Network network)
         {
+            SprawdzZbieznosc(network.BadanePunkty);
             SprawdzCykle(network.BadanePunkty);
             UstawWnioski(network);
         }
@@ -160,7 +163,12 @@ namespace ZmsiProjOne
                 }
                 else if (badanyPunkt.PunktDoKtoregoZbiega != null)
                 {
-                    if(!badanyPunkt.PunktDoKtoregoZbiega.Cykl.Any())
+                    if (badanyPunkt.PunktDoKtoregoZbiegaFinalnie != null)
+                    {// Zbiega do punktu
+                        badanyPunkt.CzyPunktZbiezny = true;
+                        badanyPunkt.Wniosek = $"Punkt [{String.Join(" ", badanyPunkt.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", badanyPunkt.PunktDoKtoregoZbiegaFinalnie.BadanyPunkt.ToArray())}";
+                    }
+                    else
                     {// Wpada w cykl
                         badanyPunkt.CzyPunktWpadaWCykl = true;
 
@@ -171,13 +179,6 @@ namespace ZmsiProjOne
                         }
                         badanyPunkt.Wniosek = $"Punkt [{String.Join(" ", badanyPunkt.BadanyPunkt.ToArray())}] wpada w cykl: {String.Join(" -> ", punktyCyklu)}";
                     }
-                    else
-                    {// Zbiega do punktu
-                        badanyPunkt.CzyPunktZbiezny = true;
-
-
-                        badanyPunkt.Wniosek = $"Punkt [{String.Join(" ", badanyPunkt.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", badanyPunkt.PunktDoKtoregoZbiega.BadanyPunkt.ToArray())}";
-                    }
                 }
             }
         }
@@ -187,20 +188,41 @@ namespace ZmsiProjOne
             foreach (var badanyPunkt in badanePunkty)
             {
                 List<Examination> potencjalnyCykl = new List<Examination>();
-                Rekurencja(badanyPunkt.PunktDoKtoregoZbiega, potencjalnyCykl, badanePunkty.Count);
+                ZwrocListeCykliRekurencja(badanyPunkt.PunktDoKtoregoZbiega, potencjalnyCykl, badanePunkty.Count);
                 if (potencjalnyCykl.Any(x => x.BadanyPunkt.AreMatrixesEquals(badanyPunkt.BadanyPunkt)))
                     badanyPunkt.Cykl = new List<Examination>(potencjalnyCykl);
             }
         }
 
-        public static void Rekurencja(Examination punktReferujacyDalej, List<Examination> wykrytyCykl, int maksymalnaMocCyklu)
+        public static void SprawdzZbieznosc(List<Examination> badanePunkty)
+        {
+            foreach (var badanyPunkt in badanePunkty)
+            {
+                var punktStalyDoKtoregoZbiegaFinalnie = ZwrocPunktDoKoregoZbiegaRekurencja(badanyPunkt.PunktDoKtoregoZbiega, badanePunkty.Count);
+                if (punktStalyDoKtoregoZbiegaFinalnie != null)
+                    badanyPunkt.PunktDoKtoregoZbiegaFinalnie = punktStalyDoKtoregoZbiegaFinalnie;
+            }
+        }
+
+        public static Examination ZwrocPunktDoKoregoZbiegaRekurencja(Examination punktReferujacyDalej, int maksymalnaMocCyklu)
+        {
+            if (punktReferujacyDalej == null || maksymalnaMocCyklu == 0)
+                return null;
+
+            if (punktReferujacyDalej.CzyPunktStaly.HasValue && punktReferujacyDalej.CzyPunktStaly.Value == true)
+                return punktReferujacyDalej;
+
+            return ZwrocPunktDoKoregoZbiegaRekurencja(punktReferujacyDalej.PunktDoKtoregoZbiega, --maksymalnaMocCyklu);
+        }
+
+        public static void ZwrocListeCykliRekurencja(Examination punktReferujacyDalej, List<Examination> wykrytyCykl, int maksymalnaMocCyklu)
         {
             if (punktReferujacyDalej == null || maksymalnaMocCyklu == 0 || wykrytyCykl.Any(x => x.BadanyPunkt.AreMatrixesEquals(punktReferujacyDalej.BadanyPunkt)))
                 return;
 
             wykrytyCykl.Add(punktReferujacyDalej);
 
-            Rekurencja(punktReferujacyDalej.PunktDoKtoregoZbiega, wykrytyCykl, --maksymalnaMocCyklu);
+            ZwrocListeCykliRekurencja(punktReferujacyDalej.PunktDoKtoregoZbiega, wykrytyCykl, --maksymalnaMocCyklu);
         }
 
         public static void CzyNadalBadac(Examination examination)
