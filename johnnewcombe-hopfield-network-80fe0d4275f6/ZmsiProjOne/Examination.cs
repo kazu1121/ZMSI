@@ -10,6 +10,10 @@ namespace ZmsiProjOne
         public Matrix BadanyPunkt { get; set; }
         public string BadanyPunktString { get; set; }
         public bool? CzyPunktStaly { get; set; }
+        public bool? CzyPunktZbiezny { get; set; }
+        public bool? CzyPunktTworzyCykl { get; set; }
+        public bool? CzyPunktWpadaWCykl { get; set; }
+
         public Examination PunktDoKtoregoZbiega { get; set; }
         public List<Examination> Cykl { get; set; }
         public List<ExaminationStep> ListaKrorkow { get; set; }

@@ -41,7 +41,7 @@ namespace ZmsiProjOne
                 {
                     for (int k = 0; k < columns; k++)
                     {
-                        tempMatrix.SetElement(j, k, random.NextDouble() >= 0.5 ? random.NextDouble() : (random.NextDouble() * -1));
+                        tempMatrix.SetElement(j, k, (random.NextDouble() >= 0.5 ? random.NextDouble() : (random.NextDouble() * -1) * 10));
                     }
                 }
 
@@ -148,6 +148,8 @@ namespace ZmsiProjOne
                 }
                 else if(badanyPunkt.Cykl.Any())
                 { // Tworzy cykl
+
+                    badanyPunkt.CzyPunktTworzyCykl = true;
                     List<string> punktyCyklu = new List<string>();
                     foreach (var krokCyklu in badanyPunkt.Cykl)
                     {
@@ -160,6 +162,8 @@ namespace ZmsiProjOne
                 {
                     if(!badanyPunkt.PunktDoKtoregoZbiega.Cykl.Any())
                     {// Wpada w cykl
+                        badanyPunkt.CzyPunktWpadaWCykl = true;
+
                         List<string> punktyCyklu = new List<string>();
                         foreach (var krokCyklu in badanyPunkt.PunktDoKtoregoZbiega.Cykl)
                         {
@@ -169,6 +173,9 @@ namespace ZmsiProjOne
                     }
                     else
                     {// Zbiega do punktu
+                        badanyPunkt.CzyPunktZbiezny = true;
+
+
                         badanyPunkt.Wniosek = $"Punkt [{String.Join(" ", badanyPunkt.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", badanyPunkt.PunktDoKtoregoZbiega.BadanyPunkt.ToArray())}";
                     }
                 }

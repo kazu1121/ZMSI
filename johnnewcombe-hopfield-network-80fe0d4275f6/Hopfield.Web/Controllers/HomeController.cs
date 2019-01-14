@@ -113,25 +113,6 @@ namespace Hopfield.Web.Controllers
 
             foreach (var generatedMatrix in generatedMatrixes)
             {
-                //result.HopfieldResultViewModel.Add(new HopfieldResultViewModel()
-                //{
-                //    ResultNetwork = ZmsiProjOne.Program.SynchHopfield(
-                //                                                generatedMatrix,
-                //                                            new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, 0.5),
-                //                                            viewModel.ActivationFunction),
-                //    HopfieldViewModel = new HopfieldViewModel()
-                //    {
-                //        WeightMatrix = new double[viewModel.WeightMatrixSize][],
-                //        IMatrix = new double[viewModel.WeightMatrixSize],
-                //        AsyncExaminingOrder = new int[viewModel.WeightMatrixSize],
-                //        HopfieldBaseData = new HopfieldBaseViewModel()
-                //        {
-                //            ActivationFunction = viewModel.ActivationFunction,
-                //            ExaminationMode = viewModel.ExaminationMode
-                //        }
-                //    }
-                //});
-
                 var hvm = new HopfieldViewModel()
                 {
                     WeightMatrix = new double[viewModel.WeightMatrixSize][],
@@ -159,6 +140,37 @@ namespace Hopfield.Web.Controllers
                 };
 
                 result.HopfieldResultViewModel.Add(hrvm);
+            }
+
+            for (int i = 0; i < result.HopfieldResultViewModel[0].ResultNetwork.BadanePunkty.Count; i++)
+            {
+                result.PointSummaryViewModelList.Add(new PointSummaryViewModel()
+                {
+                    PunktString = result.HopfieldResultViewModel[0].ResultNetwork.BadanePunkty[i].BadanyPunktString
+                });
+            }
+
+            foreach (var hrvm in result.HopfieldResultViewModel)
+            {
+                foreach (var punkt in hrvm.ResultNetwork.BadanePunkty)
+                {                    
+                    if (punkt.CzyPunktStaly.HasValue && punkt.CzyPunktStaly.Value == true)
+                    {
+                        result.PointSummaryViewModelList.FirstOrDefault(x => x.PunktString == punkt.BadanyPunktString).IleStaly++;
+                    }
+                    else if (punkt.CzyPunktZbiezny.HasValue && punkt.CzyPunktZbiezny.Value == true)
+                    {
+                        result.PointSummaryViewModelList.FirstOrDefault(x => x.PunktString == punkt.BadanyPunktString).IleZbiezny++;
+                    }
+                    else if (punkt.CzyPunktTworzyCykl.HasValue && punkt.CzyPunktTworzyCykl.Value == true)
+                    {
+                        result.PointSummaryViewModelList.FirstOrDefault(x => x.PunktString == punkt.BadanyPunktString).IleTworzyCykl++;
+                    }
+                    else if (punkt.CzyPunktWpadaWCykl.HasValue && punkt.CzyPunktWpadaWCykl.Value == true)
+                    {
+                        result.PointSummaryViewModelList.FirstOrDefault(x => x.PunktString == punkt.BadanyPunktString).IleWpadaWCykl++;
+                    }                    
+                }
             }
 
             return View("HopfieldResultTwo", result);

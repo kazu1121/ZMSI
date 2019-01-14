@@ -96,8 +96,28 @@
                     <label class="control-label">Wniosek: @Model.HopfieldResultViewModel[i].ResultNetwork.BadanePunkty[j].Wniosek</label>
                 </div>
             }
+
         }
 
         <h2 style="text-align: center;">Podsumowanie</h2>
+        <table class="table table-striped">
+            <tr>
+                <td>Wektor</td>
+                <td>Stały</td>
+                <td>Zbieżny</td>
+                <td>Tworzy cykl</td>
+                <td>Wpada w cykl</td>
+            </tr>
+        @for (int j = 0; j < Model.PointSummaryViewModelList.Count; j++)
+        {
+            <tr>
+                <td>@Model.PointSummaryViewModelList[j].PunktString</td>
+                <td>@Model.PointSummaryViewModelList[j].IleStaly</td>
+                <td>@Model.PointSummaryViewModelList[j].IleZbiezny</td>
+                <td>@Model.PointSummaryViewModelList[j].IleTworzyCykl</td>
+                <td>@Model.PointSummaryViewModelList[j].IleWpadaWCykl</td>
+            </tr>
+        }
+        </table>
     </div>
 </div>
