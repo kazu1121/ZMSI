@@ -22,8 +22,8 @@ namespace ZmsiProjOne
             Matrix macierzWag = new Matrix(new double[,] { { 0d, 4d }, { 4d, 0d } });
             Matrix macierzI = new Matrix(new double[] { 0d, 0d });
 
-            var network = SynchHopfield(macierzWag, macierzI, ActivationFunction.Unipolar);
-            network.WyswietlPrzebiegNaKonsoli();
+            //var network = SynchHopfield(macierzWag, macierzI, ActivationFunction.Unipolar);
+            //network.WyswietlPrzebiegNaKonsoli();
 
             Console.ReadKey();
         }

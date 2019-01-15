@@ -81,17 +81,31 @@ namespace Hopfield.Web.Controllers
             if (!ModelState.IsValid)
                 return View(viewModel);
 
-            var computedNetwork = ZmsiProjOne.Program.SynchHopfield(
-                new DMU.Math.Matrix(viewModel.WeightMatrix.To2D<double>()),
-                new DMU.Math.Matrix(viewModel.IMatrix),
-                viewModel.HopfieldBaseData.ActivationFunction);
+            var result = new HopfieldResultViewModel();
+            Network resultNetwork = null;
 
-            var result = new HopfieldResultViewModel()
+            if (viewModel.HopfieldBaseData.ExaminationMode == ExaminationMode.Sync)
+            {
+                resultNetwork = ZmsiProjOne.Program.SynchHopfield(
+                    new DMU.Math.Matrix(viewModel.WeightMatrix.To2D<double>()),
+                    new DMU.Math.Matrix(viewModel.IMatrix),
+                    viewModel.HopfieldBaseData.ActivationFunction);
+            }
+            else
+            {
+                HopfieldAsync ha = new HopfieldAsync();
+
+                resultNetwork = ha.runHopfield(new DMU.Math.Matrix(viewModel.WeightMatrix.To2D<double>()),
+                                                new DMU.Math.Matrix(viewModel.IMatrix),
+                                                viewModel.AsyncExaminingOrder,
+                                                viewModel.HopfieldBaseData.ActivationFunction);
+            }
+
+            result = new HopfieldResultViewModel()
             {
                 HopfieldViewModel = viewModel,
-                ResultNetwork = computedNetwork
+                ResultNetwork = resultNetwork
             };
-
 
             return View("HopfieldResultOne", result);
         }
