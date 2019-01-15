@@ -46,12 +46,14 @@ namespace ZmsiProjOne
                 // sprawdzamy czy v(t) i  v(t-1) sa takie same
                 if (listaWystapionychWektorow[listaWystapionychWektorow.Count - 1].AreMatrixesEquals(examination.ListaKrorkow[i].PotencjalWyjsciowy))
                 {
+                
                     licznikCykluTegoSamegoVektora++;
                     if (licznikCykluTegoSamegoVektora >= n)
                     {
+                        // ostatni jest punktem ktory jest staly
                         Examination ostatni = network.BadanePunkty.FirstOrDefault(x => x.BadanyPunkt.AreMatrixesEquals(listaWystapionychWektorow[listaWystapionychWektorow.Count - 1]));
 
-                        int StalyIndex = network.BadanePunkty.FindIndex(0, x => x == ostatni); 
+                        //int StalyIndex = network.BadanePunkty.FindIndex(0, x => x == ostatni); 
 
 
                         if (listaWystapionychWektorow.Count == 1)
@@ -63,25 +65,33 @@ namespace ZmsiProjOne
                         }
                         else
                         {
-                            foreach (var item in listaWystapionychWektorow)
-                            {
 
+                            //jezeli przeszlismy przez wiecej niz jeden wektor V
+                            for (var j=0;j<listaWystapionychWektorow.Count;j++)
+                            {
+                                var item = listaWystapionychWektorow[j];
+
+                                // wyszukujemy punkty ktore potem przechodza do ostatniego
                                 var findedExamination=network.BadanePunkty.FirstOrDefault(x => x.BadanyPunkt.AreMatrixesEquals(item));
 
                                 if(findedExamination != null)
                                 { // Czy tutaj oznacza, że zbiega do tego punktu?
                                     //findedExamination.Wniosek = StalyIndex+"";
-
                                     findedExamination.CzyPunktZbiezny = true;
                                     findedExamination.Wniosek = $"Punkt [{String.Join(" ", findedExamination.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", ostatni.BadanyPunkt.ToArray())}";
+                                    findedExamination.PunktDoKtoregoZbiegaFinalnie = ostatni;
                                 }
 
                                 if (item.AreMatrixesEquals(ostatni.BadanyPunkt))
                                 {// Czy tutaj oznacza, że punkt jest stały?
                                     //findedExamination.Wniosek = "s";
-                                    var networkPoint = network.BadanePunkty.FirstOrDefault(x => x.BadanyPunktString == findedExamination.BadanyPunktString);
-                                    networkPoint.Wniosek = $"Punkt [{String.Join(" ", findedExamination.BadanyPunkt.ToArray())}] jest stały!";
-                                    networkPoint.CzyPunktStaly = true;
+
+                                //    var networkPoint = network.BadanePunkty.FirstOrDefault(x => x.BadanyPunktString == findedExamination.BadanyPunktString);
+                                  //  networkPoint.Wniosek = $"Punkt [{String.Join(" ", findedExamination.BadanyPunkt.ToArray())}] jest stały!";
+                                    //networkPoint.CzyPunktStaly = true;
+                                    //var networkPoint = network.BadanePunkty.FirstOrDefault(x => x.BadanyPunktString == findedExamination.BadanyPunktString);
+                                    ostatni.Wniosek = $"Punkt [{String.Join(" ", findedExamination.BadanyPunkt.ToArray())}] jest stały!";
+                                    ostatni.CzyPunktStaly = true;
                                 }
                             }
 
@@ -108,6 +118,26 @@ namespace ZmsiProjOne
                     }
                     else
                     {
+
+
+
+                        var networkPoint = network.BadanePunkty.FirstOrDefault(x => x.BadanyPunkt.AreMatrixesEquals(examination.ListaKrorkow[i].PotencjalWyjsciowy));
+                        // sprawdzamy czy vektor do ktorego zbiegł obecny wektor zostął juz obliczony ( jak tak to konczymy dzialanie)!!
+                        if (!String.IsNullOrEmpty(networkPoint.Wniosek))
+                        {
+                            if (networkPoint.CzyPunktStaly.HasValue && networkPoint.CzyPunktStaly.Value==true)
+                            {
+                                examination.Wniosek = $"Punkt [{String.Join(" ", examination.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", networkPoint.BadanyPunkt.ToArray())}";
+                            }
+                            else
+                            {
+                                examination.Wniosek = $"Punkt [{String.Join(" ", examination.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", networkPoint.PunktDoKtoregoZbiegaFinalnie.BadanyPunkt.ToArray())}";
+
+                            }
+                            examination.CzyPunktZbiezny = true;
+                            return true;
+
+                        }
                         listaWystapionychWektorow.Add(examination.ListaKrorkow[i].PotencjalWyjsciowy);
                     }
                     licznikCykluTegoSamegoVektora = 0;
