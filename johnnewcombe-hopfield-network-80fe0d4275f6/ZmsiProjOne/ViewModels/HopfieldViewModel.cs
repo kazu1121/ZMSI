@@ -25,7 +25,7 @@ namespace ZmsiProjOne.ViewModels
         [DisplayName("Macierz I")]
         public double[] IMatrix { get; set; }
 
-        [DisplayName("Kolejność punktów badania asynchronicznego")]
+        [DisplayName("Kolejność punktów badania asynchronicznego - (0 oznacza punkt startowy)")]
         public int[] AsyncExaminingOrder { get; set; }
     }
 }

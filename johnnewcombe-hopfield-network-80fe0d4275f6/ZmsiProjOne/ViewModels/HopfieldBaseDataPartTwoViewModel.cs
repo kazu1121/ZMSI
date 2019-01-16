@@ -84,5 +84,8 @@ namespace ZmsiProjOne.ViewModels
         [DisplayName("Tryb badania")]
         public ExaminationMode ExaminationMode { get; set; }
         public List<SelectListItem> ExaminationModeSelectList { set; get; }
+
+        [DisplayName("Kolejność punktów badania asynchronicznego - (0 oznacza punkt startowy)")]
+        public int[] AsyncExaminingOrder { get; set; }
     }
 }

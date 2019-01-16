@@ -120,7 +120,14 @@ namespace Hopfield.Web.Controllers
         {
             if (!ModelState.IsValid)
                 return View(viewModel);
-                                   
+
+            if (viewModel.ExaminationMode == ExaminationMode.Async && viewModel.AsyncExaminingOrder == null)
+            {
+                viewModel.AsyncExaminingOrder = new int[viewModel.WeightMatrixSize];
+                return View("HopfieldResultTwoAsyncOrderInfo", viewModel);
+            }
+
+            double iMatrixValue = 25;
             var generatedMatrixes = ZmsiProjOne.Program.GenerateRandomMatrixes(viewModel.MatrixQuantity, viewModel.WeightMatrixSize, viewModel.WeightMatrixSize);
 
             HopfieldResultTwoViewModel result = new HopfieldResultTwoViewModel();
@@ -131,7 +138,7 @@ namespace Hopfield.Web.Controllers
                 {
                     WeightMatrix = new double[viewModel.WeightMatrixSize][],
                     IMatrix = new double[viewModel.WeightMatrixSize],
-                    AsyncExaminingOrder = new int[viewModel.WeightMatrixSize],
+                    AsyncExaminingOrder = viewModel.AsyncExaminingOrder,
                     HopfieldBaseData = new HopfieldBaseViewModel()
                     {
                         ActivationFunction = viewModel.ActivationFunction,
@@ -141,24 +148,23 @@ namespace Hopfield.Web.Controllers
                 for (int i = 0; i < viewModel.WeightMatrixSize; i++)
                 {
                     hvm.WeightMatrix[i] = generatedMatrix.GetRow(i).ToArray();
-                    hvm.IMatrix[i] = 0.5;
+                    hvm.IMatrix[i] = iMatrixValue;
                 }
 
-                hvm.AsyncExaminingOrder = new int[] { 0, 1, 2 };
                 Network resultNetwork = null;
                 if(viewModel.ExaminationMode == ExaminationMode.Async)
                 {
                     HopfieldAsync ha = new HopfieldAsync();
                     resultNetwork = ha.runHopfield(generatedMatrix,
-                                                    new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, 0.5),
-                                                    new int[] { 0, 1, 2 },
+                                                    new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, iMatrixValue),
+                                                    viewModel.AsyncExaminingOrder,
                                                     viewModel.ActivationFunction);
                 }
                 else
                 {
                     resultNetwork = ZmsiProjOne.Program.SynchHopfield(
                                                                 generatedMatrix,
-                                                            new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, 0.5),
+                                                            new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, iMatrixValue),
                                                             viewModel.ActivationFunction);
                 }
 

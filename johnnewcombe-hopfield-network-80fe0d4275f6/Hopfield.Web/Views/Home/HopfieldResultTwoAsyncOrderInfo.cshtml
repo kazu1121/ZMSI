@@ -1,0 +1,41 @@
+﻿@model ZmsiProjOne.ViewModels.HopfieldBaseDataPartTwoViewModel
+@{
+    ViewData["Title"] = "HopfieldResultTwoAsyncOrderInfo";
+}
+
+
+<h2>Pobieranie danych badania</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="HopfieldBaseDataPartTwo">
+            @Html.HiddenFor(x => x.ActivationFunction)
+            @Html.HiddenFor(x => x.ExaminationMode)
+            @Html.HiddenFor(x => x.MatrixQuantity)
+            @Html.HiddenFor(x => x.WeightMatrixSize)
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @if (Model.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Async)
+            {
+                <div class="form-group">
+                    <label asp-for="AsyncExaminingOrder" class="control-label"></label>
+
+                    <table>
+                        <tr>
+                            @for (int i = 0; i < Model.AsyncExaminingOrder.Length; i++)
+                            {
+                                <td>@Html.EditorFor(x => Model.AsyncExaminingOrder[i])</td>
+
+                            }
+                        </tr>
+                    </table>
+                </div>
+            }
+
+            <div class="form-group">
+                <input type="submit" value="Oblicz" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
