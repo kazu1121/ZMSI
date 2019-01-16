@@ -131,7 +131,8 @@ namespace ZmsiProjOne
                             }
                             else
                             {
-                                examination.Wniosek = $"Punkt [{String.Join(" ", examination.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", networkPoint.PunktDoKtoregoZbiegaFinalnie.BadanyPunkt.ToArray())}";
+                                //examination.Wniosek = $"Punkt [{String.Join(" ", examination.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", networkPoint.PunktDoKtoregoZbiegaFinalnie.BadanyPunkt.ToArray())}";
+                                examination.Wniosek = $"Punkt [{String.Join(" ", examination.BadanyPunkt.ToArray())}] zbiega do punktu: {String.Join($" ", networkPoint.BadanyPunkt.ToArray())}";
 
                             }
                             examination.CzyPunktZbiezny = true;

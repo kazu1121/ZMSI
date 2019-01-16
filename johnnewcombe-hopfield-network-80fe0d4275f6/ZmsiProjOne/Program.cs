@@ -41,7 +41,7 @@ namespace ZmsiProjOne
                 {
                     for (int k = 0; k < columns; k++)
                     {
-                        tempMatrix.SetElement(j, k, (random.NextDouble() >= 0.5 ? random.NextDouble() : (random.NextDouble() * -1) * 10));
+                        tempMatrix.SetElement(j, k, (random.NextDouble() >= 0.5 ? random.Next(-10, 10) : (random.Next(-10, 10) * -1)));
                     }
                 }
 

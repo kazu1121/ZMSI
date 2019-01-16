@@ -144,12 +144,27 @@ namespace Hopfield.Web.Controllers
                     hvm.IMatrix[i] = 0.5;
                 }
 
-                var hrvm = new HopfieldResultViewModel()
+                hvm.AsyncExaminingOrder = new int[] { 0, 1, 2 };
+                Network resultNetwork = null;
+                if(viewModel.ExaminationMode == ExaminationMode.Async)
                 {
-                    ResultNetwork = ZmsiProjOne.Program.SynchHopfield(
+                    HopfieldAsync ha = new HopfieldAsync();
+                    resultNetwork = ha.runHopfield(generatedMatrix,
+                                                    new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, 0.5),
+                                                    new int[] { 0, 1, 2 },
+                                                    viewModel.ActivationFunction);
+                }
+                else
+                {
+                    resultNetwork = ZmsiProjOne.Program.SynchHopfield(
                                                                 generatedMatrix,
                                                             new DMU.Math.Matrix(1, generatedMatrix.ColumnCount, 0.5),
-                                                            viewModel.ActivationFunction),
+                                                            viewModel.ActivationFunction);
+                }
+
+                var hrvm = new HopfieldResultViewModel()
+                {
+                    ResultNetwork = resultNetwork,
                     HopfieldViewModel = hvm
                 };
 

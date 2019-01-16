@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Rezultat";
     string trybBadania = Model.HopfieldResultViewModel[0].HopfieldViewModel.HopfieldBaseData.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Sync ? "synchroniczny" : "asynchroniczny";
+    bool isTrybSynchroniczny = Model.HopfieldResultViewModel[0].HopfieldViewModel.HopfieldBaseData.ExaminationMode == ZmsiProjOne.ViewModels.ExaminationMode.Sync;
 }
 <div class="row">
     <div class="col-md-12">
@@ -55,9 +56,9 @@
 
                     <table>
                         <tr>
-                            @for (int j = 0; j < Model.HopfieldResultViewModel[j].HopfieldViewModel.AsyncExaminingOrder.Length; i++)
+                            @for (int j = 0; j < Model.HopfieldResultViewModel[i].HopfieldViewModel.AsyncExaminingOrder.Length; j++)
                             {
-                                <td>@Html.EditorFor(x => Model.HopfieldResultViewModel[j].HopfieldViewModel.AsyncExaminingOrder[j], new { htmlAttributes = new { @disabled = "disabled" } })</td>
+                                <td>@Html.EditorFor(x => Model.HopfieldResultViewModel[i].HopfieldViewModel.AsyncExaminingOrder[j], new { htmlAttributes = new { @disabled = "disabled" } })</td>
                             }
                         </tr>
                     </table>
@@ -105,8 +106,11 @@
                 <td>Wektor</td>
                 <td>Stały</td>
                 <td>Zbieżny</td>
-                <td>Tworzy cykl</td>
-                <td>Wpada w cykl</td>
+                @if(isTrybSynchroniczny)
+                {
+                    <td>Tworzy cykl</td>
+                    <td>Wpada w cykl</td>
+                }
             </tr>
         @for (int j = 0; j < Model.PointSummaryViewModelList.Count; j++)
         {
@@ -114,8 +118,11 @@
                 <td>@Model.PointSummaryViewModelList[j].PunktString</td>
                 <td>@Model.PointSummaryViewModelList[j].IleStaly</td>
                 <td>@Model.PointSummaryViewModelList[j].IleZbiezny</td>
-                <td>@Model.PointSummaryViewModelList[j].IleTworzyCykl</td>
-                <td>@Model.PointSummaryViewModelList[j].IleWpadaWCykl</td>
+                @if (isTrybSynchroniczny)
+                {
+                    <td>@Model.PointSummaryViewModelList[j].IleTworzyCykl</td>
+                    <td>@Model.PointSummaryViewModelList[j].IleWpadaWCykl</td>
+                }
             </tr>
         }
         </table>
